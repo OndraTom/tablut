@@ -306,7 +306,7 @@ public class PlayBoard implements Cloneable
 	private int[][] cloneBoard()
 	{
 		int i,j;
-		int[][] newBoard = new int[SIZE][SIZE];
+		int[][] newBoard = new int[SIZE + 1][SIZE + 1];
 
 		for (i = 0; i < board.length; i++)
 		{
