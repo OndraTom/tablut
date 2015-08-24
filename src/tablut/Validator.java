@@ -55,6 +55,18 @@ public class Validator
 
 
 	/**
+	 * Ověří, zda-li je hodnota platná pro definici hráče.
+	 *
+	 * @param value
+	 * @return
+	 */
+	private boolean isPlayerValue(int value)
+	{
+		return value == TablutSquare.RUSSIAN || value == TablutSquare.SWEDEN;
+	}
+
+
+	/**
 	 * Validuje hráče na tahu.
 	 *
 	 * @param playerOnMove
@@ -69,7 +81,7 @@ public class Validator
 
 		int val = Integer.parseInt(playerOnMove.getTextContent());
 
-		if (val != 1 && val != 2)
+		if (!isPlayerValue(val))
 		{
 			throw new ValidatorException("Player on move has bad value.");
 		}
@@ -91,7 +103,7 @@ public class Validator
 
 		int val = Integer.parseInt(winner.getTextContent());
 
-		if (val != 0 && val != 1 && val != 2)
+		if (val != 0 && !isPlayerValue(val))
 		{
 			throw new ValidatorException("Winner has bad value.");
 		}

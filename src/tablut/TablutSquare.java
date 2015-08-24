@@ -13,6 +13,24 @@ import javax.swing.*;
 public class TablutSquare extends JButton
 {
 	/**
+	 * Hodnota pole ruského hráče.
+	 */
+	public static int RUSSIAN = 1;
+
+
+	/**
+	 * Hodnota pole švédského hráče.
+	 */
+	public static int SWEDEN = 2;
+
+
+	/**
+	 * Hodnota pole krále.
+	 */
+	public static int KING = 3;
+
+
+	/**
 	 * Koordináty, hodnota.
 	 */
 	private int x, y, value;

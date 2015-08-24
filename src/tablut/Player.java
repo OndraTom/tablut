@@ -95,14 +95,7 @@ public abstract class Player
 	 */
 	private static int getOtherPlayer(int playerOnMove)
 	{
-		if (playerOnMove == 1)
-		{
-			return 2;
-		}
-		else
-		{
-			return 1;
-		}
+		return playerOnMove == TablutSquare.RUSSIAN ? TablutSquare.SWEDEN : TablutSquare.RUSSIAN;
 	}
 
 

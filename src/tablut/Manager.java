@@ -35,13 +35,13 @@ public class Manager implements ActionListener
 
 
 	/**
-	 * Hráč č. 1.
+	 * Hráč č. 1 (Rus).
 	 */
 	private Player playerA;
 
 
 	/**
-	 * Hráč č. 2.
+	 * Hráč č. 2 (Švéd).
 	 */
 	private Player playerB;
 
@@ -49,7 +49,7 @@ public class Manager implements ActionListener
 	/**
 	 * Hráč na tahu.
 	 */
-	private int playerOnMove = 1;
+	private int playerOnMove = TablutSquare.RUSSIAN;
 
 
 	/**
@@ -163,7 +163,7 @@ public class Manager implements ActionListener
 
 	/**
 	 * Vrátí hráče B.
-	 * 
+	 *
 	 * @return
 	 */
 	public Player getPlayerB()
@@ -212,7 +212,7 @@ public class Manager implements ActionListener
 	 */
 	private Player getPlayer()
 	{
-		if (playerOnMove == 1)
+		if (playerOnMove == TablutSquare.RUSSIAN)
 		{
 			return playerA;
 		}
@@ -253,7 +253,7 @@ public class Manager implements ActionListener
 	 */
 	private int getOtherPlayer(int playerNumber)
 	{
-		return playerNumber == 1 ? 2 : 1;
+		return playerNumber == TablutSquare.RUSSIAN ? TablutSquare.SWEDEN : TablutSquare.RUSSIAN;
 	}
 
 
@@ -296,8 +296,8 @@ public class Manager implements ActionListener
 	 */
 	private void clearMoves()
 	{
-		moveFrom = null;
-		moveTo = null;
+		moveFrom	= null;
+		moveTo		= null;
 	}
 
 
@@ -324,9 +324,9 @@ public class Manager implements ActionListener
 		int value = board.getCoordsValue(x, y);
 
 		// Král -> švédové.
-		if (value == 3)
+		if (value == TablutSquare.KING)
 		{
-			return playerOnMove == 2;
+			return playerOnMove == TablutSquare.SWEDEN;
 		}
 
 		return playerOnMove == value;
@@ -500,11 +500,11 @@ public class Manager implements ActionListener
 	 */
 	private void announceWinner()
 	{
-		if (winner == 1)
+		if (winner == TablutSquare.RUSSIAN)
 		{
 			JOptionPane.showMessageDialog(null, "Russians win!");
 		}
-		else if (winner == 2)
+		else if (winner == TablutSquare.SWEDEN)
 		{
 			JOptionPane.showMessageDialog(null, "Swedes win!");
 		}
@@ -574,13 +574,13 @@ public class Manager implements ActionListener
 					// Pokud byl král zajat, nastavíme vítěze a vypíšeme zprávu.
 					if (judge.isKingCaptured())
 					{
-						winner = 1;
+						winner = TablutSquare.RUSSIAN;
 					}
 
 					// Pokud byl král zachráněn, nastavíme vítěze a vypíšeme zprávu.
 					else if (judge.isKingSave())
 					{
-						winner = 2;
+						winner = TablutSquare.SWEDEN;
 					}
 					else
 					{

@@ -48,9 +48,9 @@ public class Storage
 	 */
 	private Element makePlayerElement(int playerNum, Manager manager, Document dom)
 	{
-		Player player		= playerNum == 1 ? manager.getPlayerA() : manager.getPlayerB();
-		Element element		= dom.createElement("player" + playerNum);
-		Element type		= dom.createElement("type");
+		Player player	= playerNum == TablutSquare.RUSSIAN ? manager.getPlayerA() : manager.getPlayerB();
+		Element element	= dom.createElement("player" + playerNum);
+		Element type	= dom.createElement("type");
 
 		element.appendChild(type);
 

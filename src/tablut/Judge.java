@@ -222,7 +222,7 @@ public class Judge implements Cloneable
 	 */
 	private boolean isKing(int value)
 	{
-		return value == 3;
+		return value == TablutSquare.KING;
 	}
 
 
@@ -234,7 +234,7 @@ public class Judge implements Cloneable
 	 */
 	public boolean isRussian(int playerValue)
 	{
-		return playerValue == 1;
+		return playerValue == TablutSquare.RUSSIAN;
 	}
 
 
@@ -342,7 +342,7 @@ public class Judge implements Cloneable
 	 */
 	public boolean isKingCaptured()
 	{
-		return !board.isValueExist(3);
+		return !board.isValueExist(TablutSquare.KING);
 	}
 
 

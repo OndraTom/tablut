@@ -11,15 +11,27 @@ import java.util.List;
 public class PlayBoard implements Cloneable
 {
 	/**
-	 * Dvourozměrné pole hrací desky [řádek][sloupec].
+	 * Index hranice hrací desky.
 	 */
-	private int[][] board;
+	public static int SIZE = 8;
+
+
+	/**
+	 * Index pole králova paláce.
+	 */
+	public static int KINGS_PALACE = 4;
 
 
 	/**
 	 * Pole králových polí.
 	 */
 	public static int[][] PROTECTED_FIELDS = {{0, 0}, {0, 8}, {8, 0}, {8, 8}, {4, 4}};
+
+
+	/**
+	 * Dvourozměrné pole hrací desky [řádek][sloupec].
+	 */
+	private int[][] board;
 
 
 	/**
@@ -125,7 +137,7 @@ public class PlayBoard implements Cloneable
 	 */
 	public boolean isKingsPalaceField(int[] coord)
 	{
-		return (coord[0] == 4 && coord[1] == 4);
+		return (coord[0] == KINGS_PALACE && coord[1] == KINGS_PALACE);
 	}
 
 
@@ -249,7 +261,7 @@ public class PlayBoard implements Cloneable
 		{
 			for (j = 0; j < board[i].length; j++)
 			{
-				if (board[i][j] == 3)
+				if (board[i][j] == TablutSquare.KING)
 				{
 					return new int[]{i, j};
 				}
@@ -294,7 +306,7 @@ public class PlayBoard implements Cloneable
 	private int[][] cloneBoard()
 	{
 		int i,j;
-		int[][] newBoard = new int[9][9];
+		int[][] newBoard = new int[SIZE][SIZE];
 
 		for (i = 0; i < board.length; i++)
 		{
