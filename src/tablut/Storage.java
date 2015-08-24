@@ -294,7 +294,7 @@ public class Storage
 	private PlayBoard makeBoardFromElement(Node boardElement) throws StorageException
 	{
 		int i,j;
-		int[][] values = new int[9][9];
+		int[][] values = new int[PlayBoard.SIZE + 1][PlayBoard.SIZE + 1];
 		Element row, cell;
 		Element board = (Element) boardElement;
 
@@ -307,11 +307,11 @@ public class Storage
 			throw new StorageException(ve.getMessage());
 		}
 
-		for (i = 0; i < 9; i++)
+		for (i = 0; i <= PlayBoard.SIZE; i++)
 		{
 			row = (Element) board.getElementsByTagName("r-" + i).item(0);
 
-			for (j = 0; j < 9; j++)
+			for (j = 0; j <= PlayBoard.SIZE; j++)
 			{
 				cell = (Element) row.getElementsByTagName("c-" + j).item(0);
 

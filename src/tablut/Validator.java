@@ -126,7 +126,7 @@ public class Validator
 			throw new ValidatorException("Board is not defined");
 		}
 
-		for (i = 0; i < 9; i++)
+		for (i = 0; i <= PlayBoard.SIZE; i++)
 		{
 			row = (Element) board.getElementsByTagName("r-" + i).item(0);
 
@@ -135,7 +135,7 @@ public class Validator
 				throw new ValidatorException("Board row is missing.");
 			}
 
-			for (j = 0; j < 9; j++)
+			for (j = 0; j <= PlayBoard.SIZE; j++)
 			{
 				cell = (Element) row.getElementsByTagName("c-" + j).item(0);
 
@@ -146,7 +146,7 @@ public class Validator
 
 				val = Integer.parseInt(cell.getTextContent());
 
-				if (val < 0 || val > 8)
+				if (val < 0 || val > PlayBoard.SIZE)
 				{
 					throw new ValidatorException("Board value is out of bounds.");
 				}
@@ -176,7 +176,7 @@ public class Validator
 		int x = Integer.parseInt(coordinate.getAttribute("x"));
 		int y = Integer.parseInt(coordinate.getAttribute("y"));
 
-		if (x < 0 || x > 8 || y < 0 || y > 8)
+		if (x < 0 || x > PlayBoard.SIZE || y < 0 || y > PlayBoard.SIZE)
 		{
 			throw new ValidatorException("Coordinate is out of bounds.");
 		}

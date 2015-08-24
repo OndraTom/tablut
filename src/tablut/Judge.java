@@ -82,7 +82,7 @@ public class Judge implements Cloneable
 	 */
 	private boolean isCoordRangeValid(int range)
 	{
-		return (range >= 0 && range <= 8);
+		return (range >= 0 && range <= PlayBoard.SIZE);
 	}
 
 
@@ -104,7 +104,7 @@ public class Judge implements Cloneable
 		int[] move;
 
 		// Směr dolů.
-		for (i = from[0] + 1; i <= 8; i++)
+		for (i = from[0] + 1; i <= PlayBoard.SIZE; i++)
 		{
 			move = new int[]{i, from[1]};
 			if (!this.board.isCoordBlank(move) || (this.board.isProtectedField(move) && !this.isKing(board.getCoordsValue(from[0], from[1]))))
@@ -115,7 +115,7 @@ public class Judge implements Cloneable
 		}
 
 		// Směr doprava.
-		for (i = from[1] + 1; i <= 8; i++)
+		for (i = from[1] + 1; i <= PlayBoard.SIZE; i++)
 		{
 			move = new int[]{from[0], i};
 			if (!this.board.isCoordBlank(move) || (this.board.isProtectedField(move) && !this.isKing(board.getCoordsValue(from[0], from[1]))))
@@ -259,7 +259,7 @@ public class Judge implements Cloneable
 				suspiciousValue = board.getCoordsValue(x - 1, y);
 				if (	// Zajímání krále.
 						(this.isRussian(playerOnMove) && this.isKing(suspiciousValue)
-						&& y - 1 >= 0 && y + 1 < 9
+						&& y - 1 >= 0 && y + 1 <= PlayBoard.SIZE
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 2, y)) || board.isProtectedField(new int[]{x - 2, y}))
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 1, y - 1)) || board.isProtectedField(new int[]{x - 1, y - 1}))
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 1, y + 1)) || board.isProtectedField(new int[]{x - 1, y + 1})))
@@ -273,12 +273,12 @@ public class Judge implements Cloneable
 			}
 
 			// Směr dolů
-			if (x + 2 < 9)
+			if (x + 2 <= PlayBoard.SIZE)
 			{
 				suspiciousValue = board.getCoordsValue(x + 1, y);
 				if (	// Zajímání krále.
 						(this.isRussian(playerOnMove) && this.isKing(suspiciousValue)
-						&& y - 1 >= 0 && y + 1 < 9
+						&& y - 1 >= 0 && y + 1 <= PlayBoard.SIZE
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 2, y)) || board.isProtectedField(new int[]{x + 2, y}))
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 1, y - 1)) || board.isProtectedField(new int[]{x + 1, y - 1}))
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 1, y + 1)) || board.isProtectedField(new int[]{x + 1, y + 1})))
@@ -292,12 +292,12 @@ public class Judge implements Cloneable
 			}
 
 			// Směr doprava.
-			if (y + 2 < 9)
+			if (y + 2 <= PlayBoard.SIZE)
 			{
 				suspiciousValue = board.getCoordsValue(x, y + 1);
 				if (	// Zajímání krále.
 						(this.isRussian(playerOnMove) && this.isKing(suspiciousValue)
-						&& x - 1 >= 0 && x + 1 < 9
+						&& x - 1 >= 0 && x + 1 <= PlayBoard.SIZE
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x, y + 2)) || board.isProtectedField(new int[]{x, y + 2}))
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 1, y + 1)) || board.isProtectedField(new int[]{x - 1, y + 1}))
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 1, y + 1)) || board.isProtectedField(new int[]{x + 1, y + 1})))
@@ -316,7 +316,7 @@ public class Judge implements Cloneable
 				suspiciousValue = board.getCoordsValue(x, y - 1);
 				if (	// Zajímání krále.
 						(this.isRussian(playerOnMove) && this.isKing(suspiciousValue)
-						&& x - 1 >= 0 && x + 1 < 9
+						&& x - 1 >= 0 && x + 1 <= PlayBoard.SIZE
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x, y - 2)) || board.isProtectedField(new int[]{x, y - 2}))
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 1, y - 1)) || board.isProtectedField(new int[]{x - 1, y - 1}))
 						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 1, y - 1)) || board.isProtectedField(new int[]{x + 1, y - 1})))
@@ -357,7 +357,7 @@ public class Judge implements Cloneable
 		int[] position = board.getKingsPosition();
 
 		// Zkontroluje ortogonální pozice kolem krále (zda-li se jedná o nepřítele).
-		return position != null && position[0] - 1 >= 0 && position[0] + 1 < 9 && position[1] - 1 >= 0 && position[1] + 1 < 9
+		return position != null && position[0] - 1 >= 0 && position[0] + 1 <= PlayBoard.SIZE && position[1] - 1 >= 0 && position[1] + 1 <= PlayBoard.SIZE
 				&& this.isRussian(board.getCoordsValue(position[0] - 1, position[1]))
 				&& this.isRussian(board.getCoordsValue(position[0] + 1, position[1]))
 				&& this.isRussian(board.getCoordsValue(position[0], position[1] - 1))

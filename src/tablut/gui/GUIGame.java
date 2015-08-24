@@ -139,7 +139,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		int[][] board = this.board.getBoard();
 
 		// Inicializace hrací desky.
-		JPanel tablutBoard = new JPanel(new GridLayout(0, 9));
+		JPanel tablutBoard = new JPanel(new GridLayout(0, PlayBoard.SIZE));
 		tablutBoard.setBorder(new LineBorder(Color.BLACK));
 
 		// Vložíme buttony na hrací desku.
