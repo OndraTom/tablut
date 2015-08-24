@@ -475,7 +475,7 @@ public class Manager implements ActionListener
 				}
 				catch (HistoryException e)
 				{
-					System.out.println(e.getMessage());
+					JOptionPane.showMessageDialog(null, e.getMessage());
 				}
 			}
 
@@ -488,7 +488,7 @@ public class Manager implements ActionListener
 				}
 				catch (HistoryException e)
 				{
-					System.out.println(e.getMessage());
+					JOptionPane.showMessageDialog(null, e.getMessage());
 				}
 			}
 		}
@@ -557,7 +557,7 @@ public class Manager implements ActionListener
 				// Při zachycení výjimky vypíše zprávu.
 				catch (PlayerException ex)
 				{
-					System.out.println(ex.getMessage());
+					JOptionPane.showMessageDialog(null, ex.getMessage());
 					break;
 				}
 			}
@@ -597,14 +597,14 @@ public class Manager implements ActionListener
 				else
 				{
 					this.clearMoves();
-					System.out.println("Move is not valid.");
+					JOptionPane.showMessageDialog(null, "Move is not valid.");
 				}
 			}
 
 			// Při zachycení výjimky vypíše zprávu.
 			catch (JudgeException ex)
 			{
-				System.out.println(ex.getMessage());
+				JOptionPane.showMessageDialog(null, ex.getMessage());
 			}
 		}
 

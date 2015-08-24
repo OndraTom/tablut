@@ -1,6 +1,5 @@
 package tablut.gui;
 
-import tablut.gui.GUIGame;
 import tablut.listeners.LoadGameListener;
 import tablut.events.LoadGameEvent;
 import tablut.exceptions.StorageException;
@@ -13,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import tablut.GameThread;
 import tablut.Manager;
@@ -117,8 +117,7 @@ public class GUIOptions extends javax.swing.JFrame implements LoadGameListener
 						}
 						catch (StorageException se)
 						{
-							// todo: otestovat chybu, vyhodit dialog.
-							System.out.println(se.getMessage());
+							JOptionPane.showMessageDialog(null, se.getMessage());
 						}
 					}
 				});

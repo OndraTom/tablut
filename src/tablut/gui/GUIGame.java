@@ -267,7 +267,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 							catch (StorageException se)
 							{
 								// todo: otestovat chybu, vyhodit dialog.
-								System.out.println(se.getMessage());
+								JOptionPane.showMessageDialog(null, se.getMessage());
 							}
 						}
 					});
@@ -297,7 +297,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 							catch (StorageException se)
 							{
 								// todo: otestovat chybu, vyhodit dialog.
-								System.out.println(se.getMessage());
+								JOptionPane.showMessageDialog(null, se.getMessage());
 							}
 						}
 					});
