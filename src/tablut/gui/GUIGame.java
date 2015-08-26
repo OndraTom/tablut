@@ -129,6 +129,19 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 
 	/**
+	 * Vytvoří novou hru (velice zjednodušeně a nešetrně vůči paměti).
+	 */
+	private void newGame()
+	{
+		// Vytvoří úvodní options.
+		new GUIOptions().setVisible(true);
+
+		// Skryje aktivní okno.
+		this.setVisible(false);
+	}
+
+
+	/**
 	 * Vrátí grafický objekt hrací desky.
 	 */
 	private JPanel createTablutBoard()
@@ -242,8 +255,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					new GUIOptions().setVisible(true);
-					GUIGame.this.setVisible(false);
+					newGame();
 				}
 			}
 		);
