@@ -117,7 +117,7 @@ public class GUIOptions extends javax.swing.JFrame implements LoadGameListener
 						}
 						catch (StorageException se)
 						{
-							JOptionPane.showMessageDialog(null, se.getMessage());
+							System.out.println(se.getMessage());
 						}
 					}
 				});

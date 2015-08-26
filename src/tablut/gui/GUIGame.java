@@ -266,8 +266,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 							}
 							catch (StorageException se)
 							{
-								// todo: otestovat chybu, vyhodit dialog.
-								JOptionPane.showMessageDialog(null, se.getMessage());
+								System.out.println(se.getMessage());
 							}
 						}
 					});
