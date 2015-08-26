@@ -227,6 +227,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		// Položky menu.
 		JMenu gameMenu		= new JMenu("Game");
+		JMenuItem newGame	= new JMenuItem("New");
 		JMenuItem options	= new JMenuItem("Options");
 		JMenuItem save		= new JMenuItem("Save");
 		JMenuItem load		= new JMenuItem("Load");
@@ -236,6 +237,17 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		JMenuItem bestMove	= new JMenuItem("Best move");
 
 		// Nastavení vlastností položek menu.
+		newGame.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					new GUIOptions().setVisible(true);
+					GUIGame.this.setVisible(false);
+				}
+			}
+		);
+
 		options.addActionListener(new ActionListener()
 			{
 				@Override
@@ -332,6 +344,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 			}
 		});
 
+		gameMenu.add(newGame);
 		gameMenu.add(options);
 		gameMenu.addSeparator();
 		gameMenu.add(save);
