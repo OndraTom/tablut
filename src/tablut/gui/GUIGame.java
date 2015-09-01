@@ -25,6 +25,7 @@ import tablut.Manager;
 import tablut.PlayBoard;
 import tablut.RedoButton;
 import tablut.Storage;
+import tablut.TablutCoordinate;
 import tablut.TablutSquare;
 import tablut.UndoButton;
 
@@ -152,12 +153,15 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		int[][] board = this.board.getBoard();
 
 		// Inicializace hrací desky.
-		JPanel tablutBoard = new JPanel(new GridLayout(0, PlayBoard.SIZE + 1));
+		JPanel tablutBoard = new JPanel(new GridLayout(0, PlayBoard.SIZE + 2));
 		tablutBoard.setBorder(new LineBorder(Color.BLACK));
 
 		// Vložíme buttony na hrací desku.
 		for (i = 0; i < board.length; i++)
 		{
+			// Vložíme vertikální koordinátu.
+			tablutBoard.add(new TablutCoordinate(i, "vertical"));
+
 			for (j = 0; j < board[i].length; j++)
 			{
 				// Vytvoříme button a nastavíme managera jako posluchače.
@@ -168,6 +172,15 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 				tablutBoard.add(b);
 			}
 		}
+
+		// Vložíme horizontální koordináty.
+		tablutBoard.add(new JPanel());
+
+		for (i = 0; i < board.length; i++)
+		{
+			tablutBoard.add(new TablutCoordinate(i, "horizontal"));
+		}
+
 
 		return tablutBoard;
 	}
@@ -347,7 +360,12 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 				try
 				{
 					int[][] bestMove = manager.getBestMove();
-					JOptionPane.showMessageDialog(null, "Best move: [" + bestMove[0][0] + "," + bestMove[0][1] + "] -> [" + bestMove[1][0] + "," + bestMove[1][1] + "]");
+					JOptionPane.showMessageDialog(null, "Best move: " +
+							TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") + 
+							TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
+							"  >  " +
+							TablutCoordinate.getCoordinateText(bestMove[1][0], "vertical") +
+							TablutCoordinate.getCoordinateText(bestMove[1][1], "horizontal"));
 				}
 				catch (PlayerException pe)
 				{

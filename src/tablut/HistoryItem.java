@@ -92,12 +92,16 @@ public class HistoryItem
 
 	/**
 	 * Vrátí text reprezentující tah (odkud kam).
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
 	public String toString()
 	{
-		return moveFrom[0] + "|" + moveFrom[1] + " -> " + moveTo[0] + "|" + moveTo[1];
+		return	TablutCoordinate.getCoordinateText(moveFrom[0], "vertical") +
+				TablutCoordinate.getCoordinateText(moveFrom[1], "horizontal") +
+				"  >  " +
+				TablutCoordinate.getCoordinateText(moveTo[0], "vertical") +
+				TablutCoordinate.getCoordinateText(moveTo[1], "horizontal");
 	}
 }
