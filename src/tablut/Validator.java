@@ -46,9 +46,9 @@ public class Validator
 
 			int difficultyValue = Integer.parseInt(difficulty.getTextContent().trim());
 
-			if (difficultyValue < 0 || difficultyValue > 3)
+			if (difficultyValue < 0 || difficultyValue > 4)
 			{
-				throw new ValidatorException("Difficulty of computer player has to be in interval between 0 and 3.");
+				throw new ValidatorException("Difficulty of computer player has to be in interval between 0 and 4.");
 			}
 		}
 	}
