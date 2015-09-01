@@ -420,12 +420,6 @@ public class Manager implements ActionListener
 		// Získá hráče na tahu.
 		playerOnMove = hItem.getPlayerOnMove();
 
-		// Pokud je hráč na tahu počítač, vrátíme 2x undo (pokud je to možné).
-		if (!isPlayerOnMoveHuman() && history.hasUndo())
-		{
-			hItem = history.getUndo();
-		}
-
 		// Nastavíme hrací desku.
 		board = (PlayBoard) hItem.getBoard().clone();
 		judge = new Judge(board);
@@ -482,31 +476,33 @@ public class Manager implements ActionListener
 				TablutSquare square = (TablutSquare) evt.getSource();
 				this.addMove(square.getXCoord(), square.getYCoord());
 			}
+		}
 
-			// Kliknutí na undo button.
-			if (evt.getSource() instanceof UndoButton)
+		// Kliknutí na undo button.
+		if (evt.getSource() instanceof UndoButton)
+		{
+			try
 			{
-				try
-				{
-					undo();
-				}
-				catch (HistoryException e)
-				{
-					JOptionPane.showMessageDialog(null, e.getMessage());
-				}
+				gamePaused = true;
+				undo();
 			}
-
-			// Kliknutí na redo button.
-			if (evt.getSource() instanceof RedoButton)
+			catch (HistoryException e)
 			{
-				try
-				{
-					redo();
-				}
-				catch (HistoryException e)
-				{
-					JOptionPane.showMessageDialog(null, e.getMessage());
-				}
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			}
+		}
+
+		// Kliknutí na redo button.
+		if (evt.getSource() instanceof RedoButton)
+		{
+			try
+			{
+				gamePaused = true;
+				redo();
+			}
+			catch (HistoryException e)
+			{
+				JOptionPane.showMessageDialog(null, e.getMessage());
 			}
 		}
 
