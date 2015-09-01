@@ -238,7 +238,7 @@ public abstract class Player
 			child.playMove(move[0], move[1], playerOnMove);
 
 			// Zjistíme ohodnocení konkrétního tahu (do hloubky).
-			valuation = -Player.alfabeta(child, Player.getOtherPlayer(playerOnMove), deep - 1, alfa, Player.further(-alfa));
+			valuation = -Player.alfabeta(child, Player.getOtherPlayer(playerOnMove), deep - 2, alfa, Player.further(-alfa));
 			valuation = Player.closer(valuation);
 
 			// Pokud je ohodnocení větší, než alfa, nahradíme ji a nastavíme jako tah, jako nejlepší.
