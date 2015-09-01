@@ -83,6 +83,12 @@ public class Manager implements ActionListener
 
 
 	/**
+	 * Příznak pozastavené hry.
+	 */
+	boolean gamePaused = false;
+
+
+	/**
 	 * @param playerA		index hráče č. 1
 	 * @param playerB		index hráče č. 2
 	 * @param difficultyA	obtížnost hráče č. 1
@@ -114,6 +120,17 @@ public class Manager implements ActionListener
 		this.board			= board;
 		this.judge			= new Judge(board);
 		this.history		= history;
+	}
+
+
+	/**
+	 * Vrátí příznak toho, zda-li je ve hře počítačový hráč.
+	 *
+	 * @return
+	 */
+	public boolean isComputerPlayerInGame()
+	{
+		return playerA instanceof ComputerPlayer || playerB instanceof ComputerPlayer;
 	}
 
 
@@ -492,6 +509,13 @@ public class Manager implements ActionListener
 				}
 			}
 		}
+
+		// Kliknutí na pozastavení/spuštění PC hry
+		if (evt.getSource() instanceof PcPlayPauseButton)
+		{
+			changePausePlay();
+			this.changeGUI();
+		}
 	}
 
 
@@ -524,6 +548,26 @@ public class Manager implements ActionListener
 
 
 	/**
+	 * Zjistí, jestli je hra pozastavená.
+	 *
+	 * @return
+	 */
+	public boolean isGamePaused()
+	{
+		return gamePaused;
+	}
+
+
+	/**
+	 * Pozastaví/spustí hru.
+	 */
+	private void changePausePlay()
+	{
+		gamePaused = !gamePaused;
+	}
+
+
+	/**
 	 * Odstartuje hrací smyčku.
 	 *
 	 * @throws InterruptedException
@@ -544,6 +588,13 @@ public class Manager implements ActionListener
 			// Pokud je hráčem na tahu počítač a nebyl nastaven tah.
 			else if (!this.isPlayerOnMoveHuman() && !this.isMoveSet())
 			{
+				// Pokud je hra pozastavena, tak aplikace čeká.
+				if (isGamePaused())
+				{
+					Thread.sleep(50);
+					continue;
+				}
+
 				try
 				{
 					// Vygeneruje nejlepší tah, podle danné obtížnosti.

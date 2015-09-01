@@ -22,6 +22,7 @@ import tablut.History;
 import tablut.HistoryItem;
 import tablut.HumanPlayer;
 import tablut.Manager;
+import tablut.PcPlayPauseButton;
 import tablut.PlayBoard;
 import tablut.RedoButton;
 import tablut.Storage;
@@ -183,6 +184,22 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 
 		return tablutBoard;
+	}
+
+
+	/**
+	 * Vrátí tlačítko pro pozastavení a znovuspuštění hry počítače.
+	 *
+	 * @param text
+	 * @return
+	 */
+	private JPanel createPcPlayPauseButton()
+	{
+		JPanel buttonPanel = new JPanel();
+
+		buttonPanel.add(new PcPlayPauseButton(manager));
+
+		return buttonPanel;
 	}
 
 
@@ -361,7 +378,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 				{
 					int[][] bestMove = manager.getBestMove();
 					JOptionPane.showMessageDialog(null, "Best move: " +
-							TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") + 
+							TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
 							TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
 							"  >  " +
 							TablutCoordinate.getCoordinateText(bestMove[1][0], "vertical") +
@@ -404,7 +421,18 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		// Přidáme prvky do framu.
 		container.add(createTablutBoard());
-		container.add(createHistoryPanel());
+
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
+
+		if (manager.isComputerPlayerInGame())
+		{
+			rightPanel.add(createPcPlayPauseButton());
+		}
+
+		rightPanel.add(createHistoryPanel());
+
+		container.add(rightPanel);
 
 		getContentPane().add(container);
 
@@ -479,6 +507,8 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		{
 			manager.setPlayerB(new HumanPlayer());
 		}
+
+		changeGUI(manager);
 	}
 
 
