@@ -168,38 +168,36 @@ public abstract class Player
 		{
 			return Player.getBoardValue(playerOnMove, judge);
 		}
-		else
+		
+		int valuation;
+
+		// Načteme všechny možné tahy.
+		List<int[][]> moves = Player.getAllPossibleMoves(judge, Player.getPlayerFields(judge, playerOnMove));
+
+		for (int[][] move : moves)
 		{
-			int valuation;
+			// Zkopírujeme rozhodčího.
+			Judge child = (Judge) judge.clone();
 
-			// Načteme všechny možné tahy.
-			List<int[][]> moves = Player.getAllPossibleMoves(judge, Player.getPlayerFields(judge, playerOnMove));
+			// Zahrajeme tah.
+			child.playMove(move[0], move[1], playerOnMove);
 
-			for (int[][] move : moves)
+			// Zjistíme ohodnocení konkrétního tahu (do hloubky).
+			valuation = -Player.alfabeta(child, Player.getOtherPlayer(playerOnMove), deep - 1, Player.further(-beta), Player.further(-alfa));
+			valuation = Player.closer(valuation);
+
+			// Pokud je ohodnocení větší, než alfa, nahradíme ji a porovnáme s betou.
+			if (valuation > alfa)
 			{
-				// Zkopírujeme rozhodčího.
-				Judge child = (Judge) judge.clone();
-
-				// Zahrajeme tah.
-				child.playMove(move[0], move[1], playerOnMove);
-
-				// Zjistíme ohodnocení konkrétního tahu (do hloubky).
-				valuation = -Player.alfabeta(child, Player.getOtherPlayer(playerOnMove), deep - 1, Player.further(-beta), Player.further(-alfa));
-				valuation = Player.closer(valuation);
-
-				// Pokud je ohodnocení větší, než alfa, nahradíme ji a porovnáme s betou.
-				if (valuation > alfa)
+				alfa = valuation;
+				if (valuation >= beta)
 				{
-					alfa = valuation;
-					if (valuation >= beta)
-					{
-						return beta;
-					}
+					return beta;
 				}
 			}
-
-			return alfa;
 		}
+
+		return alfa;
 	}
 
 
