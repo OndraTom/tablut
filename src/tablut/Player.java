@@ -3,6 +3,7 @@ package tablut;
 import tablut.exceptions.PlayerException;
 import java.util.ArrayList;
 import java.util.List;
+import tablut.listeners.PcIsThinkingListener;
 
 /**
  * Reprezentace hráče.
@@ -21,6 +22,52 @@ public abstract class Player
 	 * Definice hodnoty pro téměř jasnou výhru/prohru.
 	 */
 	public static int LOT = 90;
+
+
+	/**
+	 * Pole posluchačů události PcIsThinkingEvent.
+	 */
+	private List<PcIsThinkingListener> listeners = new ArrayList<>();
+
+
+	/**
+	 * Přidá posluchače pro událost generování nejlepšího tahu.
+	 *
+	 * @param listener
+	 */
+	public void addPcIsThinkingListener(PcIsThinkingListener listener)
+	{
+		if (listeners.contains(listener))
+		{
+			return;
+		}
+
+		listeners.add(listener);
+	}
+
+
+	/**
+	 * Obvolání posluchačů při zahájení generování nejlepšího tahu.
+	 */
+	private void startThinking()
+	{
+		for (PcIsThinkingListener listener : listeners)
+		{
+			listener.startThinking();
+		}
+	}
+
+
+	/**
+	 * Obvolání posluchačů při ukončení generování nejlepšího tahu.
+	 */
+	private void stopThinking()
+	{
+		for (PcIsThinkingListener listener : listeners)
+		{
+			listener.stopThinking();
+		}
+	}
 
 
 	/**
@@ -214,6 +261,9 @@ public abstract class Player
 	 */
 	public int[][] getBestMove(Judge judge, int playerOnMove, int deep) throws PlayerException
 	{
+		// Zahájení generování.
+		startThinking();
+
 		// Nastavíme alfu na -MAX.
 		int alfa = -MAX, valuation;
 
@@ -248,6 +298,9 @@ public abstract class Player
 				bestMove = move;
 			}
 		}
+
+		// Ukončení generování.
+		stopThinking();
 
 		return bestMove;
 	}

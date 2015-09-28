@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import tablut.listeners.PcIsThinkingListener;
 
 /**
  * Manažer.
@@ -120,6 +121,29 @@ public class Manager implements ActionListener
 		this.board			= board;
 		this.judge			= new Judge(board);
 		this.history		= history;
+	}
+
+
+	/**
+	 * Přidá posluchače generování nejlepšího tahu.
+	 *
+	 * @param listener
+	 */
+	public void addPcIsThinkingListener(PcIsThinkingListener listener)
+	{
+		playerA.addPcIsThinkingListener(listener);
+		playerB.addPcIsThinkingListener(listener);
+	}
+
+
+	/**
+	 * Vrátí počet zahraných tahů, bez zajmutí.
+	 *
+	 * @return
+	 */
+	public int getBlindMovesCount()
+	{
+		return judge.getBlindMovesCount();
 	}
 
 

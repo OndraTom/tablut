@@ -63,6 +63,17 @@ public class Judge implements Cloneable
 
 
 	/**
+	 * Vrátí počet zahraných tahů, bez zajmutí.
+	 *
+	 * @return
+	 */
+	public int getBlindMovesCount()
+	{
+		return this.blindMovesCount;
+	}
+
+
+	/**
 	 * Kontroluje, zda-li je souřadnice validní.
 	 *
 	 * @param coord

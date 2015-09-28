@@ -21,6 +21,7 @@ import tablut.ComputerPlayer;
 import tablut.History;
 import tablut.HistoryItem;
 import tablut.HumanPlayer;
+import tablut.Judge;
 import tablut.Manager;
 import tablut.PcPlayPauseButton;
 import tablut.PlayBoard;
@@ -29,13 +30,14 @@ import tablut.Storage;
 import tablut.TablutCoordinate;
 import tablut.TablutSquare;
 import tablut.UndoButton;
+import tablut.listeners.PcIsThinkingListener;
 
 /**
  * GUI hry.
  *
  * @author Ondřej Tom
  */
-public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, ChangePlayersSettingsListener
+public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, ChangePlayersSettingsListener, PcIsThinkingListener
 {
 	/**
 	 * Manažer - řídí běh celé hry.
@@ -76,7 +78,13 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	/**
 	 * Pole posluchačů události LoadGameEvent.
 	 */
-	List<LoadGameListener> listeners = new ArrayList<>();
+	private List<LoadGameListener> listeners = new ArrayList<>();
+
+
+	/**
+	 * Informační text pro hráče.
+	 */
+	private GUIStatusBar statusBar;
 
 
 	/**
@@ -90,17 +98,30 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		this.setResizable(false);
 
 		// Nastavení objektů GUI.
-		this.manager			= manager;
+		setManager(manager);
 		this.board				= manager.getPlayBoard();
 		this.history			= manager.getHistory();
 		this.storage			= new Storage();
 		this.playersSettings	= new GUIPlayersSettings(manager);
+		this.statusBar			= new GUIStatusBar(Judge.BLIND_MOVES_MAX_COUNT);
 
 		// Nastaví GUI jako posluchače pro událost změny nastavení hráčů.
 		playersSettings.addListener(this);
 
 		// Spustí inicializaci.
 		initGUI();
+	}
+
+
+	/**
+	 * Nastaví manažera.
+	 *
+	 * @param manager
+	 */
+	private void setManager(Manager manager)
+	{
+		this.manager = manager;
+		this.manager.addPcIsThinkingListener(this);
 	}
 
 
@@ -374,20 +395,32 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				try
-				{
-					int[][] bestMove = manager.getBestMove();
-					JOptionPane.showMessageDialog(null, "Best move: " +
-							TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
-							TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
-							"  >  " +
-							TablutCoordinate.getCoordinateText(bestMove[1][0], "vertical") +
-							TablutCoordinate.getCoordinateText(bestMove[1][1], "horizontal"));
-				}
-				catch (PlayerException pe)
-				{
-					JOptionPane.showMessageDialog(null, pe.getMessage());
-				}
+				// Nápovědu nejlepšího tahu pustíme v novém vlákně.
+				Thread thread = new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+
+						try
+						{
+							int[][] bestMove = manager.getBestMove();
+							JOptionPane.showMessageDialog(null, "Best move: " +
+									TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
+									TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
+									"  >  " +
+									TablutCoordinate.getCoordinateText(bestMove[1][1], "horizontal") +
+									TablutCoordinate.getCoordinateText(bestMove[1][0], "vertical"));
+						}
+						catch (PlayerException pe)
+						{
+							JOptionPane.showMessageDialog(null, pe.getMessage());
+						}
+
+					}
+
+				});
+
+				thread.start();
 			}
 		});
 
@@ -436,6 +469,8 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		getContentPane().add(container);
 
+		getContentPane().add(statusBar, BorderLayout.SOUTH);
+
 		this.setJMenuBar(createMenu());
 
 		// Zabalíme připravený frame.
@@ -457,9 +492,11 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		this.remove(container);
 
 		// Nastavení objektů GUI.
-		this.manager	= manager;
+		setManager(manager);
 		board			= manager.getPlayBoard();
 		history			= manager.getHistory();
+
+		statusBar.setBlindMovesCount(manager.getBlindMovesCount());
 
 		// Inicializuje nový kontejner (s aktuálními daty).
 		this.initGUI();
@@ -509,6 +546,26 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		}
 
 		changeGUI(manager);
+	}
+
+
+	/**
+	 * Voláno při zahájení generování.
+	 */
+	@Override
+	public void startThinking()
+	{
+		statusBar.setInfoText("PC is thinking...");
+	}
+
+
+	/**
+	 * Voláno při dokončení generování.
+	 */
+	@Override
+	public void stopThinking()
+	{
+		statusBar.clearInfoText();
 	}
 
 
