@@ -98,10 +98,10 @@ public class HistoryItem
 	@Override
 	public String toString()
 	{
-		return	TablutCoordinate.getCoordinateText(moveFrom[0], "vertical") +
-				TablutCoordinate.getCoordinateText(moveFrom[1], "horizontal") +
+		return	TablutCoordinate.getCoordinateText(moveFrom[1], "horizontal") +
+				TablutCoordinate.getCoordinateText(moveFrom[0], "vertical") +
 				"  >  " +
-				TablutCoordinate.getCoordinateText(moveTo[0], "vertical") +
-				TablutCoordinate.getCoordinateText(moveTo[1], "horizontal");
+				TablutCoordinate.getCoordinateText(moveTo[1], "horizontal") +
+				TablutCoordinate.getCoordinateText(moveTo[0], "vertical");
 	}
 }

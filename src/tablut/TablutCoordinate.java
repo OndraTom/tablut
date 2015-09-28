@@ -62,11 +62,11 @@ public class TablutCoordinate extends JPanel
 
 		if (way.equals(WAY_VERTICAL))
 		{
-			text = String.valueOf((char) (65 + value));
+			text = Integer.toString(PlayBoard.SIZE + 1 - value);
 		}
 		else
 		{
-			text = Integer.toString(value + 1);
+			text = String.valueOf((char) (65 + value));
 		}
 
 		return text;
