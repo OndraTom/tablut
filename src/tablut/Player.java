@@ -64,7 +64,7 @@ public abstract class Player
 		int myCount = board.getValueOnBoardCount(playerValue);
 		int oponentCount = board.getValueOnBoardCount(Player.getOtherPlayer(playerValue));
 
-		// Švédům se znásobí počet bodů x 2, protože mají méně kamenů.
+		// Švédům se znásobí počet bodů x 2, protože mají 2 x méně kamenů.
 		if (judge.isRussian(playerValue))
 		{
 			oponentCount *= 2;
@@ -164,11 +164,11 @@ public abstract class Player
 		}
 
 		// Pokud jsme dosáhli max. hloubky, vrátíme ohodnocení desky.
-		if (deep == 0)
+		if (deep <= 0)
 		{
 			return Player.getBoardValue(playerOnMove, judge);
 		}
-		
+
 		int valuation;
 
 		// Načteme všechny možné tahy.
@@ -190,6 +190,8 @@ public abstract class Player
 			if (valuation > alfa)
 			{
 				alfa = valuation;
+
+				// Ořezání.
 				if (valuation >= beta)
 				{
 					return beta;
@@ -236,7 +238,7 @@ public abstract class Player
 			child.playMove(move[0], move[1], playerOnMove);
 
 			// Zjistíme ohodnocení konkrétního tahu (do hloubky).
-			valuation = -Player.alfabeta(child, Player.getOtherPlayer(playerOnMove), deep - 2, alfa, Player.further(-alfa));
+			valuation = -Player.alfabeta(child, Player.getOtherPlayer(playerOnMove), deep, -MAX, Player.further(-alfa));
 			valuation = Player.closer(valuation);
 
 			// Pokud je ohodnocení větší, než alfa, nahradíme ji a nastavíme jako tah, jako nejlepší.
