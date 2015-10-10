@@ -32,17 +32,24 @@ public class HistoryItem
 
 
 	/**
+	 * Počet zahraných tahů, bez zajmutí.
+	 */
+	private int blindMovesCount;
+
+
+	/**
 	 * @param playerOnMove
 	 * @param board
 	 * @param moveFrom
 	 * @param moveTo
 	 */
-	public HistoryItem(int playerOnMove, PlayBoard board, int[] moveFrom, int[] moveTo)
+	public HistoryItem(int playerOnMove, PlayBoard board, int[] moveFrom, int[] moveTo, int blindMovesCount)
 	{
-		this.playerOnMove	= playerOnMove;
-		this.board			= board;
-		this.moveFrom		= moveFrom;
-		this.moveTo			= moveTo;
+		this.playerOnMove		= playerOnMove;
+		this.board				= board;
+		this.moveFrom			= moveFrom;
+		this.moveTo				= moveTo;
+		this.blindMovesCount	= blindMovesCount;
 	}
 
 
@@ -87,6 +94,17 @@ public class HistoryItem
 	public PlayBoard getBoard()
 	{
 		return board;
+	}
+
+
+	/**
+	 * Vrátí počet zahraných tahů, bez zajmutí.
+	 *
+	 * @return
+	 */
+	public int getBlindMovesCount()
+	{
+		return blindMovesCount;
 	}
 
 

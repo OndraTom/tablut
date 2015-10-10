@@ -488,7 +488,7 @@ public class Manager implements ActionListener
 	 */
 	private void playMove()
 	{
-		history.addUndo(new HistoryItem(playerOnMove, (PlayBoard) board.clone(), moveFrom, moveTo));
+		history.addUndo(new HistoryItem(playerOnMove, (PlayBoard) board.clone(), moveFrom, moveTo, getBlindMovesCount()));
 		judge.playMove(moveFrom, moveTo, playerOnMove);
 		this.clearMoves();
 	}
@@ -514,6 +514,9 @@ public class Manager implements ActionListener
 		// Nastavíme hráče na tahu.
 		playerOnMove = hItem.getPlayerOnMove();
 
+		// Nastavíme počet zahraných tahů, bez zajmutí.
+		judge.setBlindMovesCount(hItem.getBlindMovesCount());
+
 		// Nastavíme GUI.
 		this.clearMoves();
 		this.changeGUI();
@@ -533,6 +536,9 @@ public class Manager implements ActionListener
 		// Nastavíme hrací desku.
 		board = (PlayBoard) hItem.getBoard().clone();
 		judge = new Judge(board);
+
+		// Nastavíme počet zahraných tahů, bez zajmutí.
+		judge.setBlindMovesCount(hItem.getBlindMovesCount());
 
 		// Zahrajeme tah.
 		judge.playMove(hItem.getMoveFrom(), hItem.getMoveTo(), hItem.getPlayerOnMove());

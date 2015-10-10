@@ -347,7 +347,7 @@ public class Storage
 			int[] to = {Integer.parseInt(toElement.getAttribute("x")), Integer.parseInt(toElement.getAttribute("y"))};
 			int playerOnTheMove = Integer.parseInt(playerOnTheMoveElement.getTextContent());
 
-			HistoryItem hItem = new HistoryItem(playerOnTheMove, makeBoardFromElement(boardElement), from, to);
+			HistoryItem hItem = new HistoryItem(playerOnTheMove, makeBoardFromElement(boardElement), from, to, 0);
 
 			if (type.equals("undo"))
 			{
