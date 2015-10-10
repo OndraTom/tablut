@@ -138,8 +138,7 @@ public class Manager implements ActionListener
 	 */
 	public void addPcIsThinkingListener(PcIsThinkingListener listener)
 	{
-		playerA.addPcIsThinkingListener(listener);
-		playerB.addPcIsThinkingListener(listener);
+		ComputerPlayer.addPcIsThinkingListener(listener);
 	}
 
 
@@ -632,7 +631,7 @@ public class Manager implements ActionListener
 	 */
 	public int[][] getBestMove() throws PlayerException
 	{
-		return this.getPlayer().getBestMove(judge, playerOnMove, 4);
+		return ComputerPlayer.getBestMove(judge, playerOnMove, 4);
 	}
 
 
@@ -687,7 +686,7 @@ public class Manager implements ActionListener
 				try
 				{
 					// Vygeneruje nejlepší tah, podle danné obtížnosti.
-					int[][] computerMove = this.getPlayer().getBestMove(judge, playerOnMove, getPlayerDifficulty());
+					int[][] computerMove = ComputerPlayer.getBestMove(judge, playerOnMove, getPlayerDifficulty());
 
 					// Nastaví tah.
 					moveFrom = computerMove[0];

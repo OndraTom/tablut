@@ -408,6 +408,30 @@ public class Judge implements Cloneable
 
 
 	/**
+	 * Zkontroluje, zda-li je hráč vítězem.
+	 *
+	 * @param playerValue
+	 * @return
+	 */
+	public boolean isPlayerWinner(int playerValue)
+	{
+		return ((isRussian(playerValue) && isKingCaptured()) || (!isRussian(playerValue) && isKingSave()));
+	}
+
+
+	/**
+	 * Zkontroluje, zda-li je hráč poražen.
+	 *
+	 * @param playerValue
+	 * @return
+	 */
+	public boolean isPlayerLooser(int playerValue)
+	{
+		return !isRussian(playerValue) && isKingCaptured();
+	}
+
+
+	/**
 	 * Zahraje tah.
 	 *
 	 * @param from
