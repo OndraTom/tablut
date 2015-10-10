@@ -12,7 +12,6 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import tablut.GameThread;
 import tablut.Manager;
@@ -147,6 +146,7 @@ public class GUIOptions extends javax.swing.JFrame implements LoadGameListener
 
 		// Předá manažerovi GUI, jako posluchače události changeGUI.
 		manager.addChangeGUIListener(gui);
+		manager.addMarkSquareListener(gui);
 
 		// Zahájí hru - vytvoří nové vlákno.
 		gameThread = new GameThread(manager);

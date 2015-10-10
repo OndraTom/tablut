@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import tablut.listeners.MarkSquareListener;
 import tablut.listeners.PcIsThinkingListener;
 
 /**
@@ -80,7 +81,13 @@ public class Manager implements ActionListener
 	/**
 	 * Pole posluchačů události changeGUI.
 	 */
-	List<ChangeGUIListener> listeners = new ArrayList<>();
+	List<ChangeGUIListener> changeGuiListeners = new ArrayList<>();
+
+
+	/**
+	 * Pole posluchačů událostí spojených s označováním pole.
+	 */
+	List<MarkSquareListener> markSquareListeners = new ArrayList<>();
 
 
 	/**
@@ -314,7 +321,18 @@ public class Manager implements ActionListener
 	 */
 	public void addChangeGUIListener(ChangeGUIListener l)
 	{
-		listeners.add(l);
+		changeGuiListeners.add(l);
+	}
+
+
+	/**
+	 * Přidá posluchače událostí spojených s označováním pole.
+	 *
+	 * @param l
+	 */
+	public void addMarkSquareListener(MarkSquareListener l)
+	{
+		markSquareListeners.add(l);
 	}
 
 
@@ -325,9 +343,39 @@ public class Manager implements ActionListener
 	 */
 	private void changeGUI()
 	{
-		for (ChangeGUIListener l : listeners)
+		for (ChangeGUIListener l : changeGuiListeners)
 		{
 			l.changeGUI(new ChangeGUIEvent(this));
+		}
+	}
+
+
+	/**
+	 * Obvolá posluchače označení pole.
+	 *
+	 * @param x
+	 * @param y
+	 */
+	private void markSquare(int x, int y)
+	{
+		for (MarkSquareListener l : markSquareListeners)
+		{
+			l.markSquare(x, y);
+		}
+	}
+
+
+	/**
+	 * Obvolá posluchače odoznačení pole.
+	 *
+	 * @param x
+	 * @param y
+	 */
+	private void unmarkSquare(int x, int y)
+	{
+		for (MarkSquareListener l : markSquareListeners)
+		{
+			l.unmarkSquare(x, y);
 		}
 	}
 
@@ -337,6 +385,12 @@ public class Manager implements ActionListener
 	 */
 	private void clearMoves()
 	{
+		if (moveFrom != null && moveTo != null)
+		{
+			unmarkSquare(moveFrom[0], moveFrom[1]);
+			unmarkSquare(moveTo[0], moveTo[1]);
+		}
+
 		moveFrom	= null;
 		moveTo		= null;
 	}
@@ -393,11 +447,20 @@ public class Manager implements ActionListener
 			}
 
 			moveFrom = new int[]{x, y};
+			markSquare(x, y);
 		}
 
 		// Pokud byl nastaven tah "z" a nebyl zadán tah "do", nastaví ho.
 		else if (moveTo == null)
 		{
+			// Zrušení tahu "z" (hráč chce zřejmě vybrat jiné).
+			if (x == moveFrom[0] && y == moveFrom[1])
+			{
+				moveFrom = null;
+				unmarkSquare(x, y);
+				return;
+			}
+
 			// Hráč musí táhnout na prázdné pole.
 			if (!board.isCoordBlank(new int[]{x, y}))
 			{

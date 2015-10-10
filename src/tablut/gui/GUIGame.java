@@ -30,6 +30,7 @@ import tablut.Storage;
 import tablut.TablutCoordinate;
 import tablut.TablutSquare;
 import tablut.UndoButton;
+import tablut.listeners.MarkSquareListener;
 import tablut.listeners.PcIsThinkingListener;
 
 /**
@@ -37,7 +38,7 @@ import tablut.listeners.PcIsThinkingListener;
  *
  * @author Ondřej Tom
  */
-public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, ChangePlayersSettingsListener, PcIsThinkingListener
+public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, ChangePlayersSettingsListener, PcIsThinkingListener, MarkSquareListener
 {
 	/**
 	 * Manažer - řídí běh celé hry.
@@ -49,6 +50,12 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	 * Logická reprezentace hrací desky.
 	 */
 	private PlayBoard board;
+
+
+	/**
+	 * Fyzická reprezentace hrací desky.
+	 */
+	private JButton[][] squares;
 
 
 	/**
@@ -164,6 +171,22 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	}
 
 
+	@Override
+	public void markSquare(int x, int y)
+	{
+		TablutSquare s = (TablutSquare) squares[x][y];
+		s.markAsPlaying();
+	}
+
+
+	@Override
+	public void unmarkSquare(int x, int y)
+	{
+		TablutSquare s = (TablutSquare) squares[x][y];
+		s.unmark();
+	}
+
+
 	/**
 	 * Vrátí grafický objekt hrací desky.
 	 */
@@ -173,6 +196,9 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		// Dvourozměrné pole hrací desky - řádek, sloupec.
 		int[][] board = this.board.getBoard();
+
+		// Tlačítka si po vytvoření uložíme.
+		squares = new JButton[board.length][board.length];
 
 		// Inicializace hrací desky.
 		JPanel tablutBoard = new JPanel(new GridLayout(0, PlayBoard.SIZE + 2));
@@ -189,6 +215,9 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 				// Vytvoříme button a nastavíme managera jako posluchače.
 				JButton b = new TablutSquare(i, j, board[i][j], this.board.isProtectedField(new int[]{i, j}));
 				b.addActionListener(manager);
+
+				// Uložíme do pole.
+				squares[i][j] = b;
 
 				// Přidáme tlačítko na desku.
 				tablutBoard.add(b);

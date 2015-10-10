@@ -71,6 +71,15 @@ public class TablutSquare extends JButton
 		setMargin(buttonMargin);
 		setIcon(baseIcon);
 
+		setDefaultBackground();
+	}
+
+
+	/**
+	 * Nastaví výchozí pozadí pole.
+	 */
+	private void setDefaultBackground()
+	{
 		if (isProtected)
 		{
 			setBackground(Color.YELLOW);
@@ -123,6 +132,24 @@ public class TablutSquare extends JButton
 	public boolean isProtected()
 	{
 		return isProtected;
+	}
+
+
+	/**
+	 * Označí pole jako táhnoucí.
+	 */
+	public void markAsPlaying()
+	{
+		setBackground(Color.GRAY);
+	}
+
+
+	/**
+	 * Odoznačí pole.
+	 */
+	public void unmark()
+	{
+		setDefaultBackground();
 	}
 
 
