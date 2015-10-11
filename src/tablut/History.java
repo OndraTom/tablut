@@ -204,4 +204,55 @@ public class History
 	{
 		addItem("redo", item);
 	}
+
+
+	/**
+	 * Vrátí n-tou položku historie - odkrokuje určitý počet undo/redo.
+	 *
+	 * @param index
+	 * @return
+	 * @throws HistoryException
+	 */
+	public HistoryItem getNthItem(int index) throws HistoryException
+	{
+		int undoItemsSize	= undoItems.size();
+		String type			= "undo";
+		HistoryItem item	= null;
+		index++;
+
+		// redo
+		if (index > undoItemsSize)
+		{
+			// Musíme sejmout index o velikost pole undo.
+			index -= undoItemsSize;
+
+			// Moc velký index.
+			if (index > redoItems.size())
+			{
+				throw new HistoryException("Index is out of the range.");
+			}
+
+			type = "redo";
+		}
+
+		// undo - musíme překlopit index
+		else
+		{
+			index = undoItemsSize - index;
+		}
+
+		for (int i = 0; i < index; i++)
+		{
+			if (type.equals("undo"))
+			{
+				item = getUndo();
+			}
+			else
+			{
+				item = getRedo();
+			}
+		}
+
+		return item;
+	}
 }

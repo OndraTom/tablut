@@ -494,6 +494,40 @@ public class Manager implements ActionListener
 
 
 	/**
+	 * Provede skok v historii.
+	 *
+	 * @param hItem
+	 * @param type
+	 * @throws HistoryException
+	 */
+	private void doHistoryAction(HistoryItem hItem, String type) throws HistoryException
+	{
+		// Získá hráče na tahu.
+		playerOnMove = hItem.getPlayerOnMove();
+
+		// Nastavíme hrací desku.
+		board = (PlayBoard) hItem.getBoard().clone();
+		judge = new Judge(board);
+
+		// Nastavíme počet zahraných tahů, bez zajmutí.
+		judge.setBlindMovesCount(hItem.getBlindMovesCount());
+
+		if (type.equals("redo"))
+		{
+			// Zahrajeme tah.
+			judge.playMove(hItem.getMoveFrom(), hItem.getMoveTo(), hItem.getPlayerOnMove());
+
+			// Změníme hráče na tahu.
+			this.changePlayerOnMove();
+		}
+
+		// Nastavíme GUI.
+		this.clearMoves();
+		this.changeGUI();
+	}
+
+
+	/**
 	 * Provede operaci undo.
 	 *
 	 * @throws HistoryException
@@ -503,22 +537,7 @@ public class Manager implements ActionListener
 		// Získá tah undo z historie.
 		HistoryItem hItem = history.getUndo();
 
-		// Získá hráče na tahu.
-		playerOnMove = hItem.getPlayerOnMove();
-
-		// Nastavíme hrací desku.
-		board = (PlayBoard) hItem.getBoard().clone();
-		judge = new Judge(board);
-
-		// Nastavíme hráče na tahu.
-		playerOnMove = hItem.getPlayerOnMove();
-
-		// Nastavíme počet zahraných tahů, bez zajmutí.
-		judge.setBlindMovesCount(hItem.getBlindMovesCount());
-
-		// Nastavíme GUI.
-		this.clearMoves();
-		this.changeGUI();
+		doHistoryAction(hItem, "undo");
 	}
 
 
@@ -532,22 +551,36 @@ public class Manager implements ActionListener
 		// Získá tah redo z historie.
 		HistoryItem hItem = history.getRedo();
 
-		// Nastavíme hrací desku.
-		board = (PlayBoard) hItem.getBoard().clone();
-		judge = new Judge(board);
+		doHistoryAction(hItem, "redo");
+	}
 
-		// Nastavíme počet zahraných tahů, bez zajmutí.
-		judge.setBlindMovesCount(hItem.getBlindMovesCount());
 
-		// Zahrajeme tah.
-		judge.playMove(hItem.getMoveFrom(), hItem.getMoveTo(), hItem.getPlayerOnMove());
+	/**
+	 * Skočí na n-tou položku v historii.
+	 *
+	 * @param index
+	 * @throws HistoryException
+	 */
+	public void goToHistoryItem(int index) throws HistoryException
+	{
+		// Pokus o přejetí na aktuální položku.
+		if (history.getUndoItems().size() - (index + 1) == 0)
+		{
+			// Ojeb kvůli tomu, že list po jednom kliku nemění selektovaný index.
+			this.changeGUI();
+			return;
+		}
 
-		// Změníme hráče na tahu.
-		this.changePlayerOnMove();
+		String type = "undo";
 
-		// Nastavíme GUI.
-		this.clearMoves();
-		this.changeGUI();
+		if (index + 1 > history.getUndoItems().size())
+		{
+			type = "redo";
+		}
+
+		HistoryItem hItem = history.getNthItem(index);
+
+		doHistoryAction(hItem, type);
 	}
 
 

@@ -11,9 +11,12 @@ import tablut.exceptions.PlayerException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -30,6 +33,7 @@ import tablut.Storage;
 import tablut.TablutCoordinate;
 import tablut.TablutSquare;
 import tablut.UndoButton;
+import tablut.exceptions.HistoryException;
 import tablut.listeners.MarkSquareListener;
 import tablut.listeners.PcIsThinkingListener;
 
@@ -258,12 +262,47 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	 *
 	 * @param dataList
 	 */
-	private JScrollPane createHistoryList(List<HistoryItem> dataList)
+	private JScrollPane createHistoryList(History history)
 	{
-		// Vytvoří list z předaných dat.
-		JList list = new JList(dataList.toArray());
-		list.setEnabled(false);
+		// Naplníme pole položek historie (undo + redo).
+		List<HistoryItem> historyItems = new ArrayList<>();
+
+		historyItems.addAll(history.getUndoItems());
+
+		// Prvky redo vložíme v opačném pořadí.
+		List<HistoryItem> redoItems = history.getRedoItems();
+		ListIterator iterator = redoItems.listIterator(redoItems.size());
+		while (iterator.hasPrevious())
+		{
+			historyItems.add((HistoryItem) iterator.previous());
+		}
+
+		// Vytvoří list položek historie.
+		JList list = new JList(historyItems.toArray());
 		list.setPreferredSize(new Dimension(120, list.getPreferredSize().height));
+
+		// Označíme aktuální pozici.
+		list.setSelectedIndex(history.getUndoItems().size() - 1);
+
+		// Skok v historii.
+		list.addFocusListener(new FocusAdapter() {
+
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+				JList source = (JList) e.getSource();
+
+				try
+				{
+					manager.goToHistoryItem(source.getSelectedIndex());
+				}
+				catch (HistoryException ex)
+				{
+					JOptionPane.showMessageDialog(null, ex.getMessage());
+				}
+			}
+
+		});
 
 		// Vytvoří scrollovací panel z listu.
 		JScrollPane scrollPane = new JScrollPane(list);
@@ -302,9 +341,8 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		// Poskládáme prvky panelu.
 		historyPanel.add(undoButton);
-		historyPanel.add(createHistoryList(history.getUndoItems()));
 		historyPanel.add(redoButton);
-		historyPanel.add(createHistoryList(history.getRedoItems()));
+		historyPanel.add(createHistoryList(history));
 
 		return historyPanel;
 	}
