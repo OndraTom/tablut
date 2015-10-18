@@ -552,7 +552,7 @@ public class Manager implements ActionListener
 	public void goToHistoryItem(int index) throws HistoryException
 	{
 		// Pokus o přejetí na aktuální položku.
-		if (history.getUndoItems().size() - (index + 1) == 0)
+		if (history.getRedoItems().size() - index == 0)
 		{
 			// Ojeb kvůli tomu, že list po jednom kliku nemění selektovaný index.
 			this.changeGUI();
@@ -563,12 +563,12 @@ public class Manager implements ActionListener
 
 		String type = "undo";
 
-		if (index + 1 > history.getUndoItems().size())
+		if (index < history.getRedoItems().size())
 		{
 			type = "redo";
 		}
 
-		HistoryItem hItem = history.getNthItem(index);
+		HistoryItem hItem = history.getNthItem(index + 1);
 
 		doHistoryAction(hItem, type);
 	}

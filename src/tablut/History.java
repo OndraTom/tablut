@@ -215,30 +215,29 @@ public class History
 	 */
 	public HistoryItem getNthItem(int index) throws HistoryException
 	{
-		int undoItemsSize	= undoItems.size();
-		String type			= "undo";
+		int redoItemsSize	= redoItems.size();
+		String type			= "redo";
 		HistoryItem item	= null;
-		index++;
 
-		// redo
-		if (index > undoItemsSize)
+		// undo
+		if (index > redoItemsSize)
 		{
-			// Musíme sejmout index o velikost pole undo.
-			index -= undoItemsSize;
+			// Musíme sejmout index o velikost pole redo.
+			index -= redoItemsSize + 1;
 
 			// Moc velký index.
-			if (index > redoItems.size())
+			if (index > undoItems.size())
 			{
 				throw new HistoryException("Index is out of the range.");
 			}
 
-			type = "redo";
+			type = "undo";
 		}
 
-		// undo - musíme překlopit index
+		// redo - musíme překlopit index
 		else
 		{
-			index = undoItemsSize - index;
+			index = redoItemsSize - (index - 1);
 		}
 
 		for (int i = 0; i < index; i++)

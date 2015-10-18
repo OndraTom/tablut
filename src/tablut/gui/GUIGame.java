@@ -267,11 +267,12 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		// Naplníme pole položek historie (undo + redo).
 		List<HistoryItem> historyItems = new ArrayList<>();
 
-		historyItems.addAll(history.getUndoItems());
+		// Nejprve vložíme prvky redo.
+		historyItems.addAll(history.getRedoItems());
 
-		// Prvky redo vložíme v opačném pořadí.
-		List<HistoryItem> redoItems = history.getRedoItems();
-		ListIterator iterator = redoItems.listIterator(redoItems.size());
+		// Prvky undo vložíme v opačném pořadí.
+		List<HistoryItem> undoItems = history.getUndoItems();
+		ListIterator iterator = undoItems.listIterator(undoItems.size());
 		while (iterator.hasPrevious())
 		{
 			historyItems.add((HistoryItem) iterator.previous());
@@ -282,7 +283,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		list.setPreferredSize(new Dimension(120, list.getPreferredSize().height));
 
 		// Označíme aktuální pozici.
-		list.setSelectedIndex(history.getUndoItems().size() - 1);
+		list.setSelectedIndex(history.getRedoItems().size());
 
 		// Skok v historii.
 		list.addFocusListener(new FocusAdapter() {
