@@ -688,6 +688,17 @@ public class Manager implements ActionListener
 
 
 	/**
+	 * Zjistí, jestli již nastal konec hry.
+	 *
+	 * @return
+	 */
+	private boolean isGameOver()
+	{
+		return winner > 0 || this.judge.isBlindMovesCountReached();
+	}
+
+
+	/**
 	 * Odstartuje hrací smyčku.
 	 *
 	 * @throws InterruptedException
@@ -696,7 +707,7 @@ public class Manager implements ActionListener
 	public void startGameLoop() throws InterruptedException, ManagerException
 	{
 		// Smyčka běží, dokud není definován vítěz nebo nebylo dosaženo maximálního počtu tahů.
-		while (winner == 0 && !this.judge.isBlindMovesCountReached())
+		while (!isGameOver())
 		{
 			// Pokud je hráčem na tahu člověk a nebyl nastaven tah, tak aplikace čeká.
 			if (this.isPlayerOnMoveHuman() && !this.isMoveSet())
