@@ -232,7 +232,7 @@ public class Judge implements Cloneable
 	private boolean isEnemy(int playerValue, int value)
 	{
 		// Nekontroluje se případ krále, protože ten se neúčastní zajímání.
-		return !this.isMe(playerValue, value) && value != 0;
+		return !this.isMe(playerValue, value) && value != 0 && !(isSweden(playerValue) && isKing(value));
 	}
 
 
@@ -261,6 +261,154 @@ public class Judge implements Cloneable
 
 
 	/**
+	 * Kontroluje, zda-li hodnota reprezentuje švédského hráče.
+	 *
+	 * @param playerValue
+	 * @return
+	 */
+	public boolean isSweden(int playerValue)
+	{
+		return playerValue == TablutSquare.SWEDEN;
+	}
+
+
+	/**
+	 * Zjistí, jestli je políčko chráněné a neobsazené králem.
+	 *
+	 * @param coord
+	 * @return
+	 */
+	private boolean isProtectedCapturingField(int [] coord)
+	{
+		return board.isProtectedField(coord) && !isKing(board.getCoordsValue(coord[0], coord[1]));
+	}
+
+
+	/**
+	 * Zjistí, jestli je kámen obklíčen - pomocná (horizontálně).
+	 *
+	 * @param next
+	 * @param y
+	 * @param playerOnMove
+	 * @return
+	 */
+	private boolean isCapturedWithManyHorizontal(int next, int y, int playerOnMove)
+	{
+		return
+				(y - 1 < 0 || this.isMe(playerOnMove, board.getCoordsValue(next, y - 1)) || isProtectedCapturingField(new int[]{next, y - 1})) &&
+				(y + 1 > PlayBoard.SIZE || this.isMe(playerOnMove, board.getCoordsValue(next, y + 1)) || isProtectedCapturingField(new int[]{next, y + 1}))
+		;
+	}
+
+
+	/**
+	 * Zjistí, jestli je kámen obklíčen - pomocná (vertikálně).
+	 *
+	 * @param x
+	 * @param next
+	 * @param playerOnMove
+	 * @return
+	 */
+	private boolean isCapturedWithManyVertical(int x, int next, int playerOnMove)
+	{
+		return
+				(x - 1 < 0 || this.isMe(playerOnMove, board.getCoordsValue(x - 1, next)) || isProtectedCapturingField(new int[]{x - 1, next})) &&
+				(x + 1 > PlayBoard.SIZE || this.isMe(playerOnMove, board.getCoordsValue(x + 1, next)) || isProtectedCapturingField(new int[]{x + 1, next}))
+		;
+	}
+
+
+	/**
+	 * Zjistí, jestli je kámen obklíčen (vertikálně).
+	 *
+	 * @param x
+	 * @param y
+	 * @param direction
+	 * @param playerOnMove
+	 * @return
+	 */
+	private boolean isCaptiveVertical(int x, int y, int direction, int playerOnMove)
+	{
+		int next		= x + (direction * 1);
+		int afterNext	= x + (direction * 2);
+
+		if (next >= 0 && next <= PlayBoard.SIZE && !isProtectedCapturingField(new int[]{next, y}))
+		{
+			int suspiciousValue = board.getCoordsValue(next, y);
+
+			if (this.isEnemy(playerOnMove, suspiciousValue))
+			{
+				if (afterNext >= 0 && afterNext <= PlayBoard.SIZE)
+				{
+					if (this.isMe(playerOnMove, board.getCoordsValue(afterNext, y)) || isProtectedCapturingField(new int[]{afterNext, y}))
+					{
+						if (this.isKing(suspiciousValue))
+						{
+							return isCapturedWithManyHorizontal(next, y, playerOnMove);
+						}
+						else
+						{
+							return true;
+						}
+					}
+				}
+				else
+				{
+					return isCapturedWithManyHorizontal(next, y, playerOnMove);
+				}
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * Zjistí, jestli je kámen obklíčen (horizontálně).
+	 *
+	 * @param x
+	 * @param y
+	 * @param direction
+	 * @param playerOnMove
+	 * @return
+	 */
+	private boolean isCaptiveHorizontal(int x, int y, int direction, int playerOnMove)
+	{
+		int next		= y + (direction * 1);
+		int afterNext	= y + (direction * 2);
+
+		if (next >= 0 && next <= PlayBoard.SIZE && !isProtectedCapturingField(new int[]{x, next}))
+		{
+			int suspiciousValue = board.getCoordsValue(x, next);
+
+			if (this.isEnemy(playerOnMove, suspiciousValue))
+			{
+				if (afterNext >= 0 && afterNext <= PlayBoard.SIZE)
+				{
+					if (this.isMe(playerOnMove, board.getCoordsValue(x, afterNext)) || isProtectedCapturingField(new int[]{x, afterNext}))
+					{
+						if (this.isKing(suspiciousValue))
+						{
+							return isCapturedWithManyVertical(x, next, playerOnMove);
+						}
+						else
+						{
+							return true;
+						}
+					}
+				}
+				else
+				{
+					return isCapturedWithManyVertical(x, next, playerOnMove);
+				}
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * Načte souřadnice všech zajímaných kamenů.
 	 *
 	 * @param moveTo		souřadnice tahu
@@ -269,86 +417,34 @@ public class Judge implements Cloneable
 	 */
 	public List<int[]> getCaptivesCoords(int[] moveTo, int playerOnMove)
 	{
-		int x = moveTo[0], y = moveTo[1], suspiciousValue;
+		int x = moveTo[0], y = moveTo[1];
 		List<int[]> captives = new ArrayList<>();
 
 		// Pokračujeme pouze pokud hranou figurkou není král - ten se neúčastní zajímání.
 		if (!this.isKing(board.getCoordsValue(x, y)))
 		{
 			// Směr nahoru.
-			if (x - 2 >= 0)
+			if (isCaptiveVertical(x, y, 1, playerOnMove))
 			{
-				suspiciousValue = board.getCoordsValue(x - 1, y);
-				if (	// Zajímání krále.
-						(this.isRussian(playerOnMove) && this.isKing(suspiciousValue)
-						&& y - 1 >= 0 && y + 1 <= PlayBoard.SIZE
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 2, y)) || board.isProtectedField(new int[]{x - 2, y}))
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 1, y - 1)) || board.isProtectedField(new int[]{x - 1, y - 1}))
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 1, y + 1)) || board.isProtectedField(new int[]{x - 1, y + 1})))
-						// Běžné zajímání.
-						|| (this.isEnemy(playerOnMove, suspiciousValue) && !this.isKing(suspiciousValue)
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 2, y))
-						|| (board.isProtectedField(new int[]{x - 2, y}) && !this.isKing(board.getCoordsValue(x - 2, y))))))
-				{
-					captives.add(new int[]{x - 1, y});
-				}
+				captives.add(new int[]{x + 1, y});
 			}
 
-			// Směr dolů
-			if (x + 2 <= PlayBoard.SIZE)
+			// Směr dolů.
+			if (isCaptiveVertical(x, y, -1, playerOnMove))
 			{
-				suspiciousValue = board.getCoordsValue(x + 1, y);
-				if (	// Zajímání krále.
-						(this.isRussian(playerOnMove) && this.isKing(suspiciousValue)
-						&& y - 1 >= 0 && y + 1 <= PlayBoard.SIZE
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 2, y)) || board.isProtectedField(new int[]{x + 2, y}))
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 1, y - 1)) || board.isProtectedField(new int[]{x + 1, y - 1}))
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 1, y + 1)) || board.isProtectedField(new int[]{x + 1, y + 1})))
-						// Běžné zajímání.
-						|| (this.isEnemy(playerOnMove, suspiciousValue) && !this.isKing(suspiciousValue)
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 2, y))
-						|| (board.isProtectedField(new int[]{x + 2, y}) && !this.isKing(board.getCoordsValue(x + 2, y))))))
-				{
-					captives.add(new int[]{x + 1, y});
-				}
+				captives.add(new int[]{x - 1, y});
 			}
 
 			// Směr doprava.
-			if (y + 2 <= PlayBoard.SIZE)
+			if (isCaptiveHorizontal(x, y, 1, playerOnMove))
 			{
-				suspiciousValue = board.getCoordsValue(x, y + 1);
-				if (	// Zajímání krále.
-						(this.isRussian(playerOnMove) && this.isKing(suspiciousValue)
-						&& x - 1 >= 0 && x + 1 <= PlayBoard.SIZE
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x, y + 2)) || board.isProtectedField(new int[]{x, y + 2}))
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 1, y + 1)) || board.isProtectedField(new int[]{x - 1, y + 1}))
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 1, y + 1)) || board.isProtectedField(new int[]{x + 1, y + 1})))
-						// Běžné zajímání.
-						|| (this.isEnemy(playerOnMove, suspiciousValue) && !this.isKing(suspiciousValue)
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x, y + 2))
-						|| (board.isProtectedField(new int[]{x, y + 2}) && !this.isKing(board.getCoordsValue(x, y + 2))))))
-				{
-					captives.add(new int[]{x, y + 1});
-				}
+				captives.add(new int[]{x, y + 1});
 			}
 
 			// Směr doleva.
-			if (y - 2 >= 0)
+			if (isCaptiveHorizontal(x, y, -1, playerOnMove))
 			{
-				suspiciousValue = board.getCoordsValue(x, y - 1);
-				if (	// Zajímání krále.
-						(this.isRussian(playerOnMove) && this.isKing(suspiciousValue)
-						&& x - 1 >= 0 && x + 1 <= PlayBoard.SIZE
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x, y - 2)) || board.isProtectedField(new int[]{x, y - 2}))
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x - 1, y - 1)) || board.isProtectedField(new int[]{x - 1, y - 1}))
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x + 1, y - 1)) || board.isProtectedField(new int[]{x + 1, y - 1})))
-						// Běžné zajímání.
-						|| (this.isEnemy(playerOnMove, suspiciousValue) && !this.isKing(suspiciousValue)
-						&& (this.isMe(playerOnMove, board.getCoordsValue(x, y - 2))
-						|| (board.isProtectedField(new int[]{x, y - 2}) && !this.isKing(board.getCoordsValue(x, y - 2))))))
-				{
-					captives.add(new int[]{x, y - 1});
-				}
+				captives.add(new int[]{x, y - 1});
 			}
 		}
 
@@ -378,12 +474,14 @@ public class Judge implements Cloneable
 		// Načte pozici krále.
 		int[] position = board.getKingsPosition();
 
-		// Zkontroluje ortogonální pozice kolem krále (zda-li se jedná o nepřítele).
-		return position != null && position[0] - 1 >= 0 && position[0] + 1 <= PlayBoard.SIZE && position[1] - 1 >= 0 && position[1] + 1 <= PlayBoard.SIZE
-				&& this.isRussian(board.getCoordsValue(position[0] - 1, position[1]))
-				&& this.isRussian(board.getCoordsValue(position[0] + 1, position[1]))
-				&& this.isRussian(board.getCoordsValue(position[0], position[1] - 1))
-				&& this.isRussian(board.getCoordsValue(position[0], position[1] + 1));
+		// Zkontroluje ortogonální pozice kolem krále.
+		return
+				position != null &&
+				(position[0] - 1 < 0 || this.isRussian(board.getCoordsValue(position[0] - 1, position[1])) || board.isProtectedField(new int[]{position[0] - 1, position[1]})) &&
+				(position[0] + 1 > PlayBoard.SIZE || this.isRussian(board.getCoordsValue(position[0] + 1, position[1])) || board.isProtectedField(new int[]{position[0] + 1, position[1]})) &&
+				(position[1] - 1 < 0 || this.isRussian(board.getCoordsValue(position[0], position[1] - 1)) || board.isProtectedField(new int[]{position[0], position[1] - 1})) &&
+				(position[1] + 1 > PlayBoard.SIZE || this.isRussian(board.getCoordsValue(position[0], position[1] + 1)) || board.isProtectedField(new int[]{position[0], position[1] + 1}))
+		;
 	}
 
 
@@ -408,6 +506,18 @@ public class Judge implements Cloneable
 
 
 	/**
+	 * Vrátí index oponenta.
+	 *
+	 * @param playerNumber
+	 * @return
+	 */
+	public int getOtherPlayer(int playerNumber)
+	{
+		return playerNumber == TablutSquare.RUSSIAN ? TablutSquare.SWEDEN : TablutSquare.RUSSIAN;
+	}
+
+
+	/**
 	 * Zkontroluje, zda-li je hráč vítězem.
 	 *
 	 * @param playerValue
@@ -415,7 +525,7 @@ public class Judge implements Cloneable
 	 */
 	public boolean isPlayerWinner(int playerValue)
 	{
-		return ((isRussian(playerValue) && isKingCaptured()) || (!isRussian(playerValue) && isKingSave()));
+		return ((isRussian(playerValue) && isKingCaptured()) || (isSweden(playerValue) && isKingSave()));
 	}
 
 
@@ -427,7 +537,7 @@ public class Judge implements Cloneable
 	 */
 	public boolean isPlayerLooser(int playerValue)
 	{
-		return !isRussian(playerValue) && isKingCaptured();
+		return isPlayerWinner(getOtherPlayer(playerValue));
 	}
 
 

@@ -293,23 +293,11 @@ public class Manager implements ActionListener
 
 
 	/**
-	 * Vrátí index oponenta.
-	 *
-	 * @param playerNumber
-	 * @return
-	 */
-	private int getOtherPlayer(int playerNumber)
-	{
-		return playerNumber == TablutSquare.RUSSIAN ? TablutSquare.SWEDEN : TablutSquare.RUSSIAN;
-	}
-
-
-	/**
 	 * Přepne hráče na tahu.
 	 */
 	private void changePlayerOnMove()
 	{
-		playerOnMove = getOtherPlayer(playerOnMove);
+		playerOnMove = judge.getOtherPlayer(playerOnMove);
 	}
 
 

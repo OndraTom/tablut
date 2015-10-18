@@ -123,12 +123,24 @@ public class ComputerPlayer extends Player
 		}
 
 		// Nastavíme základní vyhodnocení.
-		int valuation = (myCount - oponentCount) * 5;
+		int valuation;
 
 		// Pokud je hráč na tahu vítězem, nastavíme maximum.
-		if ((judge.isRussian(playerValue) && judge.isKingSurrounded()) || (!judge.isRussian(playerValue) && judge.isKingSave()))
+		if (judge.isPlayerWinner(playerValue))
 		{
 			valuation = MAX;
+		}
+
+		// Pokud poraženým, nastavíme minimum.
+		else if (judge.isPlayerLooser(playerValue))
+		{
+			valuation = -MAX;
+		}
+
+		// Jinak provedeme rozdíl kamenů.
+		else
+		{
+			valuation = (myCount - oponentCount) * 5;
 		}
 
 		return valuation;
@@ -297,6 +309,12 @@ public class ComputerPlayer extends Player
 			{
 				alfa = valuation;
 				bestMove = move;
+
+				// V případě jisté výhry za jeden tah nebudem pokračovat dál.
+				if (valuation == MAX - 1)
+				{
+					break;
+				}
 			}
 		}
 
