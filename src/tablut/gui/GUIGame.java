@@ -513,6 +513,25 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 
 	/**
+	 * Nastaví oznámení o vítězi do status baru.
+	 */
+	private void setWinnerText()
+	{
+		if (manager.getWinner() != 0)
+		{
+			if (manager.getWinner() == TablutSquare.RUSSIAN)
+			{
+				statusBar.setInfoText("Russians win!");
+			}
+			else
+			{
+				statusBar.setInfoText("Swedes win!");
+			}
+		}
+	}
+
+
+	/**
 	 * Inicializace GUI.
 	 */
 	private void initGUI()
@@ -568,6 +587,9 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		history			= manager.getHistory();
 
 		statusBar.setBlindMovesCount(manager.getBlindMovesCount());
+
+		// Pokud máme výherce, tak jej zobrazíme ve status baru.
+		setWinnerText();
 
 		// Inicializuje nový kontejner (s aktuálními daty).
 		this.initGUI();
