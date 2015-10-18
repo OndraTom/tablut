@@ -559,6 +559,8 @@ public class Manager implements ActionListener
 			return;
 		}
 
+		gamePaused = true;
+
 		String type = "undo";
 
 		if (index + 1 > history.getUndoItems().size())
