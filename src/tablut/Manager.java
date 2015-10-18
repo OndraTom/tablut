@@ -559,7 +559,7 @@ public class Manager implements ActionListener
 			return;
 		}
 
-		gamePaused = true;
+		pauseGame();
 
 		String type = "undo";
 
@@ -598,7 +598,7 @@ public class Manager implements ActionListener
 		{
 			try
 			{
-				gamePaused = true;
+				pauseGame();
 				undo();
 			}
 			catch (HistoryException e)
@@ -612,7 +612,7 @@ public class Manager implements ActionListener
 		{
 			try
 			{
-				gamePaused = true;
+				pauseGame();
 				redo();
 			}
 			catch (HistoryException e)
@@ -655,6 +655,15 @@ public class Manager implements ActionListener
 	public int[][] getBestMove() throws PlayerException
 	{
 		return ComputerPlayer.getBestMove(judge, playerOnMove, 4);
+	}
+
+
+	/**
+	 * Pozastaví hru.
+	 */
+	private void pauseGame()
+	{
+		gamePaused = true;
 	}
 
 
