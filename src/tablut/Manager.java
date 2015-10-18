@@ -582,15 +582,11 @@ public class Manager implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent evt)
 	{
-		// Akci provedeme pouze, pokud je na tahu člověk.
-		if (this.isPlayerOnMoveHuman())
+		// Kliknutí na hrací pole.
+		if (evt.getSource() instanceof TablutSquare && !this.isGameOver())
 		{
-			// Kliknutí na hrací pole.
-			if (evt.getSource() instanceof TablutSquare)
-			{
-				TablutSquare square = (TablutSquare) evt.getSource();
-				this.addMove(square.getXCoord(), square.getYCoord());
-			}
+			TablutSquare square = (TablutSquare) evt.getSource();
+			this.addMove(square.getXCoord(), square.getYCoord());
 		}
 
 		// Kliknutí na undo button.
