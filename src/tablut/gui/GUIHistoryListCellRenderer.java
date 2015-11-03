@@ -14,19 +14,19 @@ import javax.swing.ListCellRenderer;
 public class GUIHistoryListCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object>
 {
 	/**
-	 * Hráč na tahu.
+	 * Inkrement pro definování barev.
 	 */
-	private int playerOnMove;
+	private int increment;
 
 
 	/**
 	 * @param playerOnMove
 	 */
-	public GUIHistoryListCellRenderer(int playerOnMove)
+	public GUIHistoryListCellRenderer(int playerOnMove, int selectedIndex)
 	{
 		super();
 
-		this.playerOnMove = playerOnMove;
+		increment = playerOnMove + selectedIndex;
 	}
 
 
@@ -35,10 +35,8 @@ public class GUIHistoryListCellRenderer extends DefaultListCellRenderer implemen
 	{
 		Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-		index += playerOnMove;
-
 		// Střídáme barvy (identifikace hráče).
-		if (index % 2 == 0)
+		if ((index + increment) % 2 == 0)
 		{
 			setForeground(Color.BLACK);
 		}

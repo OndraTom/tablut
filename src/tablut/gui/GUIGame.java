@@ -306,7 +306,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		});
 
 		// Nastavíme vykreslovač.
-		list.setCellRenderer(new GUIHistoryListCellRenderer(manager.getPlayerOnMove()));
+		list.setCellRenderer(new GUIHistoryListCellRenderer(manager.getPlayerOnMove(), list.getSelectedIndex()));
 
 		// Vytvoří scrollovací panel z listu.
 		JScrollPane scrollPane = new JScrollPane(list);
