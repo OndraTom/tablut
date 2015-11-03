@@ -105,8 +105,8 @@ public class Manager implements ActionListener
 	public Manager(int playerA, int playerB, int difficultyA, int difficultyB)
 	{
 		this.judge		= new Judge(board);
-		this.playerA	= PlayerFactory.createPlayer(playerA, difficultyA + 2);
-		this.playerB	= PlayerFactory.createPlayer(playerB, difficultyB + 2);
+		this.playerA	= PlayerFactory.createPlayer(playerA, difficultyA + 1);
+		this.playerB	= PlayerFactory.createPlayer(playerB, difficultyB + 1);
 		this.history	= new History();
 	}
 
