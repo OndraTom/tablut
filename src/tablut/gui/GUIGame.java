@@ -587,6 +587,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		history			= manager.getHistory();
 
 		statusBar.setBlindMovesCount(manager.getBlindMovesCount());
+		statusBar.setCaptivesCounts(manager.getRussiansCaptivesCount(), manager.getSwedesCaptivesCount());
 
 		// Pokud máme výherce, tak jej zobrazíme ve status baru.
 		setWinnerText();

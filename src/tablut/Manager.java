@@ -695,6 +695,28 @@ public class Manager implements ActionListener
 
 
 	/**
+	 * Vrátí počet ruských zajatců.
+	 *
+	 * @return
+	 */
+	public int getRussiansCaptivesCount()
+	{
+		return judge.getPlayersCaptivesCount(TablutSquare.RUSSIAN);
+	}
+
+
+	/**
+	 * Vrátí počet švédských zajatců.
+	 *
+	 * @return
+	 */
+	public int getSwedesCaptivesCount()
+	{
+		return judge.getPlayersCaptivesCount(TablutSquare.SWEDEN);
+	}
+
+
+	/**
 	 * Odstartuje hrací smyčku.
 	 *
 	 * @throws InterruptedException

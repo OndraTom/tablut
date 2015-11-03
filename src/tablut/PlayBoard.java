@@ -29,6 +29,18 @@ public class PlayBoard implements Cloneable
 
 
 	/**
+	 * Počet ruských kamenů na hrací desce.
+	 */
+	public static int RUSSIANS_STONES_COUNT = 16;
+
+
+	/**
+	 * Počet švédských kamenů na hrací desce (nepočítáme krále).
+	 */
+	public static int SWEDES_STONES_COUNT = 8;
+
+
+	/**
 	 * Dvourozměrné pole hrací desky [řádek][sloupec].
 	 */
 	private int[][] board;

@@ -25,6 +25,18 @@ public class GUIStatusBar extends JPanel
 
 
 	/**
+	 * Počet ruských zajatců.
+	 */
+	private int russiansCaptivesCount = 0;
+
+
+	/**
+	 * Počet švédských zajatců.
+	 */
+	private int swedesCaptivesCount = 0;
+
+
+	/**
 	 * Informace pro hráče.
 	 */
 	private String infoText = "";
@@ -34,6 +46,12 @@ public class GUIStatusBar extends JPanel
 	 * Label pro maximální počet zahraných tahů, bez zajmutí.
 	 */
 	private JLabel blindMovesCountLabel;
+
+
+	/**
+	 * Label s počty zajatců.
+	 */
+	private JLabel captivesCountsLabel;
 
 
 	/**
@@ -52,11 +70,13 @@ public class GUIStatusBar extends JPanel
 
 		this.blindMovesCountLimit	= blindMovesCountLimit;
 		this.blindMovesCountLabel	= new JLabel();
+		this.captivesCountsLabel	= new JLabel();
 		this.infoTextLabel			= new JLabel();
 
 		setLabels();
 
 		add(this.blindMovesCountLabel);
+		add(this.captivesCountsLabel);
 		add(this.infoTextLabel);
 
 		// Tohle je ojeb, na kterém se mi zatím nechce pálit čas.
@@ -73,6 +93,7 @@ public class GUIStatusBar extends JPanel
 	private void setLabels()
 	{
 		setBlindMovesCountLabel();
+		setCaptivesCountLabel();
 		setInfoTextLabel();
 	}
 
@@ -83,6 +104,15 @@ public class GUIStatusBar extends JPanel
 	private void setBlindMovesCountLabel()
 	{
 		blindMovesCountLabel.setText("Blind moves: " + blindMovesCount + " / " + blindMovesCountLimit);
+	}
+
+
+	/**
+	 * Nastaví label s počty zajatců.
+	 */
+	private void setCaptivesCountLabel()
+	{
+		captivesCountsLabel.setText("<html>Captives: " + russiansCaptivesCount + " / <font color='red'>" + swedesCaptivesCount + "</font></html>");
 	}
 
 
@@ -104,6 +134,20 @@ public class GUIStatusBar extends JPanel
 	{
 		blindMovesCount = count;
 		setBlindMovesCountLabel();
+	}
+
+
+	/**
+	 * Nastaví počty zajatců.
+	 *
+	 * @param russiansCaptivesCount
+	 * @param swedesCaptivesCount
+	 */
+	public void setCaptivesCounts(int russiansCaptivesCount, int swedesCaptivesCount)
+	{
+		this.russiansCaptivesCount	= russiansCaptivesCount;
+		this.swedesCaptivesCount	= swedesCaptivesCount;
+		setCaptivesCountLabel();
 	}
 
 

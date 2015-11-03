@@ -571,6 +571,23 @@ public class Judge implements Cloneable
 
 
 	/**
+	 * Vrátí počet zajatců daného hráče.
+	 *
+	 * @param player
+	 * @return
+	 */
+	public int getPlayersCaptivesCount(int player)
+	{
+		if (player == TablutSquare.RUSSIAN)
+		{
+			return PlayBoard.SWEDES_STONES_COUNT - board.getValueOnBoardCount(TablutSquare.SWEDEN);
+		}
+
+		return PlayBoard.RUSSIANS_STONES_COUNT - board.getValueOnBoardCount(TablutSquare.RUSSIAN);
+	}
+
+
+	/**
 	 * Při kopii celého objektu je třeba vytvořit kopii hrací desky.
 	 *
 	 * @return
