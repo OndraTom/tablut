@@ -13,10 +13,29 @@ import javax.swing.ListCellRenderer;
  */
 public class GUIHistoryListCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object>
 {
+	/**
+	 * Hráč na tahu.
+	 */
+	private int playerOnMove;
+
+
+	/**
+	 * @param playerOnMove
+	 */
+	public GUIHistoryListCellRenderer(int playerOnMove)
+	{
+		super();
+
+		this.playerOnMove = playerOnMove;
+	}
+
+
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
 	{
 		Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+		index += playerOnMove;
 
 		// Střídáme barvy (identifikace hráče).
 		if (index % 2 == 0)
