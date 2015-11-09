@@ -740,8 +740,16 @@ public class Manager implements ActionListener
 				// Pokud je hra pozastavena, tak aplikace čeká.
 				if (isGamePaused())
 				{
+					// Spinkej.
+					ComputerPlayer.stopThinking();
+
 					Thread.sleep(50);
 					continue;
+				}
+				else
+				{
+					// Budíček.
+					ComputerPlayer.startThinking();
 				}
 
 				try

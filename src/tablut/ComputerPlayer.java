@@ -76,7 +76,7 @@ public class ComputerPlayer extends Player
 	/**
 	 * Obvolání posluchačů při zahájení generování nejlepšího tahu.
 	 */
-	private static void startThinking()
+	public static void startThinking()
 	{
 		for (PcIsThinkingListener listener : listeners)
 		{
@@ -88,7 +88,7 @@ public class ComputerPlayer extends Player
 	/**
 	 * Obvolání posluchačů při ukončení generování nejlepšího tahu.
 	 */
-	private static void stopThinking()
+	public static void stopThinking()
 	{
 		for (PcIsThinkingListener listener : listeners)
 		{
@@ -274,9 +274,6 @@ public class ComputerPlayer extends Player
 	 */
 	public static int[][] getBestMove(Judge judge, int playerOnMove, int deep) throws PlayerException
 	{
-		// Zahájení generování.
-		startThinking();
-
 		// Nastavíme alfu na -MAX.
 		int alfa = -MAX, valuation;
 
@@ -317,9 +314,6 @@ public class ComputerPlayer extends Player
 				}
 			}
 		}
-
-		// Ukončení generování.
-		stopThinking();
 
 		return bestMove;
 	}
