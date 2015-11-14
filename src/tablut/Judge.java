@@ -16,7 +16,13 @@ public class Judge implements Cloneable
 	/**
 	 * Maximální počet zahraných tahů, bez zajmutí.
 	 */
-	public static int BLIND_MOVES_MAX_COUNT = 30;
+	public static int BLIND_MOVES_MAX_COUNT		= 30;
+
+	/**
+	 * Konstanty pro měření oscilace pohybů.
+	 */
+	public static int MOVES_OSCILATING_LIMIT	= 4;
+	public static int MOVES_OSCILATING_DIFF		= 2;
 
 
 	/**
@@ -584,6 +590,39 @@ public class Judge implements Cloneable
 		}
 
 		return PlayBoard.RUSSIANS_STONES_COUNT - board.getValueOnBoardCount(TablutSquare.RUSSIAN);
+	}
+
+
+	/**
+	 * Zjistí, zda-li hra cyklí.
+	 *
+	 * Sleduje opakování pohybů v historii.
+	 *
+	 * @param history
+	 * @return
+	 */
+	public boolean areMovesInCycle(History history)
+	{
+		List<HistoryItem> undoItems = history.getUndoItems();
+
+		if (undoItems.size() >= MOVES_OSCILATING_LIMIT)
+		{
+			int top = undoItems.size() - 1;
+
+			for (int i = top; i >= top - MOVES_OSCILATING_DIFF; i--)
+			{
+				if (!undoItems.get(i).isOriginPlace(undoItems.get(i - MOVES_OSCILATING_DIFF)))
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 

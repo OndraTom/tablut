@@ -102,7 +102,7 @@ public class GUIPlayersSettings extends javax.swing.JFrame
 
 			playerSelection.setSelectedIndex(1);
 			difficultySelection.setEnabled(true);
-			difficultySelection.setSelectedIndex(difficulty - 2);
+			difficultySelection.setSelectedIndex(difficulty == 0 ? 0 : difficulty - 2);
 		}
 		// Nastavení lidského hráče.
 		else
@@ -298,7 +298,7 @@ public class GUIPlayersSettings extends javax.swing.JFrame
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 		for (ChangePlayersSettingsListener listener : listeners)
 		{
-			listener.changePlayersSettings(new ChangePlayersSettingsEvent(this, russianPlayer.getSelectedIndex(), difficultyRussians.getSelectedIndex(), swedePlayer.getSelectedIndex(), difficultySwedes.getSelectedIndex()));
+			listener.changePlayersSettings(new ChangePlayersSettingsEvent(this, russianPlayer.getSelectedIndex(), difficultyRussians.getSelectedIndex() + 1, swedePlayer.getSelectedIndex(), difficultySwedes.getSelectedIndex() + 1));
 		}
 
 		this.setVisible(false);

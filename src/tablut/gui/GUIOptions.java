@@ -305,8 +305,8 @@ public class GUIOptions extends javax.swing.JFrame implements LoadGameListener
 					kickTheGame(new Manager(
 							russianPlayer.getSelectedIndex(),
 							swedePlayer.getSelectedIndex(),
-							difficultyRussians.getSelectedIndex(),
-							difficultySwedes.getSelectedIndex())
+							difficultyRussians.getSelectedIndex() + 1,
+							difficultySwedes.getSelectedIndex() + 1)
 					);
 				}
 			}

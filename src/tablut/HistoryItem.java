@@ -1,5 +1,7 @@
 package tablut;
 
+import java.util.Arrays;
+
 /**
  * Prvek historie.
  *
@@ -105,6 +107,22 @@ public class HistoryItem
 	public int getBlindMovesCount()
 	{
 		return blindMovesCount;
+	}
+
+
+	/**
+	 * Zjistí, jestli je položka místem původu.
+	 *
+	 * @param item
+	 * @return
+	 */
+	public boolean isOriginPlace(HistoryItem item)
+	{
+		int[] itemMoveFrom	= item.getMoveFrom();
+		int[] itemMoveTo	= item.getMoveTo();
+
+		return	Arrays.equals(itemMoveFrom, moveTo) &&
+				Arrays.equals(itemMoveTo, moveFrom);
 	}
 
 

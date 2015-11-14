@@ -1,6 +1,7 @@
 package tablut;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import tablut.exceptions.PlayerException;
 import tablut.listeners.PcIsThinkingListener;
@@ -269,10 +270,11 @@ public class ComputerPlayer extends Player
 	 * @param judge
 	 * @param playerOnMove
 	 * @param deep
+	 * @param ignoredMove
 	 * @return
 	 * @throws PlayerException
 	 */
-	public static int[][] getBestMove(Judge judge, int playerOnMove, int deep) throws PlayerException
+	public static int[][] getBestMove(Judge judge, int playerOnMove, int deep, int[][] ignoredMove, int ignoredMovesDepth) throws PlayerException
 	{
 		// Nastavíme alfu na -MAX.
 		int alfa = -MAX, valuation;
@@ -291,6 +293,12 @@ public class ComputerPlayer extends Player
 
 		for (int[][] move : moves)
 		{
+			// Přeskočíme ignorovaný tah.
+			if (ignoredMove != null && Arrays.equals(move[0], ignoredMove[0]) && Arrays.equals(move[1], ignoredMove[1]))
+			{
+				continue;
+			}
+
 			// Zkopírujeme rozhodčího.
 			Judge child = (Judge) judge.clone();
 
@@ -304,6 +312,12 @@ public class ComputerPlayer extends Player
 			// Pokud je ohodnocení větší, než alfa, nahradíme ji a nastavíme jako tah, jako nejlepší.
 			if (valuation > alfa)
 			{
+				if (ignoredMovesDepth > 0)
+				{
+					ignoredMovesDepth--;
+					continue;
+				}
+
 				alfa = valuation;
 				bestMove = move;
 

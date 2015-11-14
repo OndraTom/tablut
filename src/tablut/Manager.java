@@ -93,7 +93,13 @@ public class Manager implements ActionListener
 	/**
 	 * Příznak pozastavené hry.
 	 */
-	boolean gamePaused = false;
+	private boolean gamePaused = false;
+
+
+	/**
+	 * Hloubka ignorace tahů.
+	 */
+	private int ignoredMovesDepth = -1;
 
 
 	/**
@@ -104,9 +110,12 @@ public class Manager implements ActionListener
 	 */
 	public Manager(int playerA, int playerB, int difficultyA, int difficultyB)
 	{
+		difficultyA = difficultyA == 1 ? 0 : difficultyA + 1;
+		difficultyB = difficultyB == 1 ? 0 : difficultyB + 1;
+
 		this.judge		= new Judge(board);
-		this.playerA	= PlayerFactory.createPlayer(playerA, difficultyA + 1);
-		this.playerB	= PlayerFactory.createPlayer(playerB, difficultyB + 1);
+		this.playerA	= PlayerFactory.createPlayer(playerA, difficultyA);
+		this.playerB	= PlayerFactory.createPlayer(playerB, difficultyB);
 		this.history	= new History();
 	}
 
@@ -271,6 +280,24 @@ public class Manager implements ActionListener
 
 
 	/**
+	 * Vrací oponenta.
+	 *
+	 * @return
+	 */
+	private Player getOponent()
+	{
+		if (playerOnMove == TablutSquare.RUSSIAN)
+		{
+			return playerB;
+		}
+		else
+		{
+			return playerA;
+		}
+	}
+
+
+	/**
 	 * Vrací obtížnost hráče na tahu.
 	 *
 	 * @return
@@ -391,6 +418,17 @@ public class Manager implements ActionListener
 	private boolean isPlayerOnMoveHuman()
 	{
 		return (this.getPlayer() instanceof HumanPlayer);
+	}
+
+
+	/**
+	 * Zjistí, zda-li je ve hře lidský hráč.
+	 *
+	 * @return
+	 */
+	protected boolean isHumanPlayerInGame()
+	{
+		return (getPlayerA() instanceof HumanPlayer) || (getPlayerB() instanceof HumanPlayer);
 	}
 
 
@@ -650,7 +688,7 @@ public class Manager implements ActionListener
 	 */
 	public int[][] getBestMove() throws PlayerException
 	{
-		return ComputerPlayer.getBestMove(judge, playerOnMove, 4);
+		return ComputerPlayer.getBestMove(judge, playerOnMove, 4, null, 0);
 	}
 
 
@@ -717,6 +755,25 @@ public class Manager implements ActionListener
 
 
 	/**
+	 * Zjístí, zda-li hra osciluje.
+	 *
+	 * @return
+	 */
+	private boolean isGameOscilating()
+	{
+		if (!isHumanPlayerInGame())
+		{
+			ComputerPlayer player	= (ComputerPlayer) getPlayer();
+			ComputerPlayer oponent	= (ComputerPlayer) getOponent();
+
+			return player.getDifficulty() <= oponent.getDifficulty() && judge.areMovesInCycle(history);
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * Odstartuje hrací smyčku.
 	 *
 	 * @throws InterruptedException
@@ -754,8 +811,22 @@ public class Manager implements ActionListener
 
 				try
 				{
+					int[][] ignoredMove = null;
+
+					// Pokud pohyby oscilují, získáme ignorovaný tah.
+					if (isGameOscilating())
+					{
+						ignoredMovesDepth++;
+
+						HistoryItem ignoredItem = history.getUndoItems().get(
+								history.getUndoItems().size() - Judge.MOVES_OSCILATING_LIMIT
+						);
+
+						ignoredMove = new int[][]{ignoredItem.getMoveFrom(), ignoredItem.getMoveTo()};
+					}
+
 					// Vygeneruje nejlepší tah, podle danné obtížnosti.
-					int[][] computerMove = ComputerPlayer.getBestMove(judge, playerOnMove, getPlayerDifficulty());
+					int[][] computerMove = ComputerPlayer.getBestMove(judge, playerOnMove, getPlayerDifficulty(), ignoredMove, ignoredMovesDepth);
 
 					// Nastaví tah.
 					moveFrom = computerMove[0];
@@ -778,6 +849,18 @@ public class Manager implements ActionListener
 
 					// Zrahrajeme tah.
 					this.playMove();
+
+					if (getPlayerA() instanceof ComputerPlayer)
+					{
+						ComputerPlayer p = (ComputerPlayer) getPlayerA();
+						System.out.println(p.getDifficulty());
+					}
+
+					if (getPlayerB() instanceof ComputerPlayer)
+					{
+						ComputerPlayer p = (ComputerPlayer) getPlayerB();
+						System.out.println(p.getDifficulty());
+					}
 
 					// Pokud byl král zajat, nastavíme vítěze a vypíšeme zprávu.
 					if (judge.isKingCaptured())

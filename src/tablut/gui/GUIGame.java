@@ -620,7 +620,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		// Player A - počítač.
 		if (event.getPlayerATypeIndex() == 1)
 		{
-			manager.setPlayerA(new ComputerPlayer(event.getPlayerADifficultyIndex() + 1));
+			manager.setPlayerA(new ComputerPlayer(event.getPlayerADifficultyIndex() == 1 ? 0 : event.getPlayerADifficultyIndex() + 1));
 		}
 		// Player A - člověk.
 		else
@@ -631,7 +631,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		// Player B - počítač.
 		if (event.getPlayerBTypeIndex() == 1)
 		{
-			manager.setPlayerB(new ComputerPlayer(event.getPlayerBDifficultyIndex() + 1));
+			manager.setPlayerB(new ComputerPlayer(event.getPlayerBDifficultyIndex() == 1 ? 0 : event.getPlayerBDifficultyIndex() + 1));
 		}
 		// Player B - člověk.
 		else
