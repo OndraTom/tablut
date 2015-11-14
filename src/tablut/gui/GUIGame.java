@@ -474,13 +474,27 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 						try
 						{
-							int[][] bestMove = manager.getBestMove();
-							JOptionPane.showMessageDialog(null, "Best move: " +
-									TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
-									TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
-									"  >  " +
-									TablutCoordinate.getCoordinateText(bestMove[1][1], "horizontal") +
-									TablutCoordinate.getCoordinateText(bestMove[1][0], "vertical"));
+							if (manager.getWinner() == 0)
+							{
+								String infoText = statusBar.getInfoText();
+
+								startThinking();
+								int[][] bestMove = manager.getBestMove();
+								stopThinking();
+
+								statusBar.setInfoText(infoText);
+
+								JOptionPane.showMessageDialog(null, "Best move: " +
+										TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
+										TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
+										"  >  " +
+										TablutCoordinate.getCoordinateText(bestMove[1][1], "horizontal") +
+										TablutCoordinate.getCoordinateText(bestMove[1][0], "vertical"));
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(null, "Game over - your best move is to start new one :)");
+							}
 						}
 						catch (PlayerException pe)
 						{

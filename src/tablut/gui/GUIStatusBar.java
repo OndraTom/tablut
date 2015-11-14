@@ -152,6 +152,17 @@ public class GUIStatusBar extends JPanel
 
 
 	/**
+	 * Vrátí nastavený info text.
+	 *
+	 * @return
+	 */
+	public String getInfoText()
+	{
+		return infoTextLabel.getText();
+	}
+
+
+	/**
 	 * Nastaví info text.
 	 *
 	 * @param text
