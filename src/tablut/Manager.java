@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import tablut.listeners.HistoryListListener;
 import tablut.listeners.MarkSquareListener;
 import tablut.listeners.PcIsThinkingListener;
 
@@ -22,7 +23,7 @@ import tablut.listeners.PcIsThinkingListener;
  *
  * @author Ondřej Tom
  */
-public class Manager implements ActionListener
+public class Manager implements ActionListener, HistoryListListener
 {
 	/**
 	 * Hrací deska.
@@ -587,6 +588,7 @@ public class Manager implements ActionListener
 	 * @param index
 	 * @throws HistoryException
 	 */
+	@Override
 	public void goToHistoryItem(int index) throws HistoryException
 	{
 		// Pokus o přejetí na aktuální položku.

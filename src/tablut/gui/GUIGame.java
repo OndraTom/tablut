@@ -11,18 +11,14 @@ import tablut.exceptions.PlayerException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import tablut.ComputerPlayer;
 import tablut.History;
-import tablut.HistoryItem;
 import tablut.HumanPlayer;
 import tablut.Judge;
 import tablut.Manager;
@@ -33,7 +29,6 @@ import tablut.Storage;
 import tablut.TablutCoordinate;
 import tablut.TablutSquare;
 import tablut.UndoButton;
-import tablut.exceptions.HistoryException;
 import tablut.listeners.MarkSquareListener;
 import tablut.listeners.PcIsThinkingListener;
 
@@ -266,59 +261,17 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	/**
 	 * Vrátí scrollovací list historie (undo/redo).
 	 *
-	 * @param dataList
+	 * @param history
 	 */
-	private JScrollPane createHistoryList(History history)
+	private GUIHistoryScrollPane createHistoryList(History history)
 	{
-		// Naplníme pole položek historie (undo + redo).
-		List<HistoryItem> historyItems = new ArrayList<>();
+		GUIHistoryList historyList = new GUIHistoryList(history);
 
-		// Nejprve vložíme prvky redo.
-		historyItems.addAll(history.getRedoItems());
+		historyList.addListener(manager);
+		historyList.setCellRenderer(new GUIHistoryListCellRenderer(manager.getPlayerOnMove(), historyList.getSelectedIndex()));
 
-		// Prvky undo vložíme v opačném pořadí.
-		List<HistoryItem> undoItems = history.getUndoItems();
-		ListIterator iterator = undoItems.listIterator(undoItems.size());
-		while (iterator.hasPrevious())
-		{
-			historyItems.add((HistoryItem) iterator.previous());
-		}
-
-		// Vytvoří list položek historie.
-		JList list = new JList(historyItems.toArray());
-		list.setPreferredSize(new Dimension(120, list.getPreferredSize().height));
-
-		// Označíme aktuální pozici.
-		list.setSelectedIndex(history.getRedoItems().size());
-
-		// Skok v historii.
-		list.addFocusListener(new FocusAdapter() {
-
-			@Override
-			public void focusGained(FocusEvent e)
-			{
-				JList source = (JList) e.getSource();
-
-				try
-				{
-					manager.goToHistoryItem(source.getSelectedIndex());
-				}
-				catch (HistoryException ex)
-				{
-					JOptionPane.showMessageDialog(null, ex.getMessage());
-				}
-			}
-
-		});
-
-		// Nastavíme vykreslovač.
-		list.setCellRenderer(new GUIHistoryListCellRenderer(manager.getPlayerOnMove(), list.getSelectedIndex()));
-
-		// Vytvoří scrollovací panel z listu.
-		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane.setPreferredSize(new Dimension(scrollPane.getPreferredSize().width, 280));
-
-		return scrollPane;
+		// Vytvoříme a vátíme scrollovací panel z listu.
+		return new GUIHistoryScrollPane(historyList);
 	}
 
 
