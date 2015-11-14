@@ -26,6 +26,12 @@ import tablut.listeners.PcIsThinkingListener;
 public class Manager implements ActionListener, HistoryListListener
 {
 	/**
+	 * Minimální zdržení PC hráče (milisekundy).
+	 */
+	private static int PC_PLAYER_DELAY = 500;
+
+
+	/**
 	 * Hrací deska.
 	 */
 	private PlayBoard board = new PlayBoard();
@@ -796,6 +802,9 @@ public class Manager implements ActionListener, HistoryListListener
 			// Pokud je hráčem na tahu počítač a nebyl nastaven tah.
 			else if (!this.isPlayerOnMoveHuman() && !this.isMoveSet())
 			{
+				// Zaznamenáme čas začátku zpracování PC hráče.
+				long pcPlayerStartTime = System.currentTimeMillis();
+
 				// Pokud je hra pozastavena, tak aplikace čeká.
 				if (isGamePaused())
 				{
@@ -843,6 +852,12 @@ public class Manager implements ActionListener, HistoryListListener
 				{
 					JOptionPane.showMessageDialog(null, ex.getMessage());
 					break;
+				}
+
+				// Zamezíme hře provést příliš rychlý tah.
+				while (System.currentTimeMillis() - pcPlayerStartTime < PC_PLAYER_DELAY)
+				{
+					Thread.sleep(50);
 				}
 			}
 
