@@ -99,6 +99,12 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 
 	/**
+	 * Frame s popisem pravidel hry.
+	 */
+	private GUIRules rulesFrame;
+
+
+	/**
 	 * Inicializace GUI.
 	 *
 	 * @param manager
@@ -369,6 +375,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		JMenuItem exit		= new JMenuItem("Exit");
 
 		JMenu helpMenu		= new JMenu("Help");
+		JMenuItem rules		= new JMenuItem("Rules");
 		JMenuItem bestMove	= new JMenuItem("Best move");
 
 		// Nastavení vlastností položek menu.
@@ -509,6 +516,15 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 			}
 		});
 
+		rules.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				showRules();
+			}
+		});
+
 		gameMenu.add(newGame);
 		gameMenu.add(options);
 		gameMenu.addSeparator();
@@ -517,6 +533,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		gameMenu.addSeparator();
 		gameMenu.add(exit);
 
+		helpMenu.add(rules);
 		helpMenu.add(bestMove);
 
 		menuBar.add(gameMenu);
@@ -674,6 +691,20 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	public void stopThinking()
 	{
 		statusBar.clearInfoText();
+	}
+
+
+	/**
+	 * Zobrazí pravidla hry.
+	 */
+	private void showRules()
+	{
+		if (rulesFrame == null)
+		{
+			rulesFrame = new GUIRules();
+		}
+
+		rulesFrame.setVisible(true);
 	}
 
 
