@@ -831,6 +831,9 @@ public class Manager implements ActionListener
 					// Nastaví tah.
 					moveFrom = computerMove[0];
 					moveTo = computerMove[1];
+
+					// Vypne "PC thinking" mód.
+					ComputerPlayer.stopThinking();
 				}
 
 				// Při zachycení výjimky vypíše zprávu.
@@ -849,18 +852,6 @@ public class Manager implements ActionListener
 
 					// Zrahrajeme tah.
 					this.playMove();
-
-					if (getPlayerA() instanceof ComputerPlayer)
-					{
-						ComputerPlayer p = (ComputerPlayer) getPlayerA();
-						System.out.println(p.getDifficulty());
-					}
-
-					if (getPlayerB() instanceof ComputerPlayer)
-					{
-						ComputerPlayer p = (ComputerPlayer) getPlayerB();
-						System.out.println(p.getDifficulty());
-					}
 
 					// Pokud byl král zajat, nastavíme vítěze a vypíšeme zprávu.
 					if (judge.isKingCaptured())
