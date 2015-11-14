@@ -63,7 +63,7 @@ public class GUIHistoryScrollPane extends JScrollPane
 	 */
 	private void setScroll()
 	{
-		if (list.getSelectedIndex() > PANE_ITEMS_COUNT - 1)
+		if (list.getSelectedIndex() > PANE_ITEMS_COUNT)
 		{
 			getViewport().setViewPosition(new Point(0, list.getSelectedIndex() * ROW_HEIGHT));
 		}
