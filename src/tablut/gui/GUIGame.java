@@ -122,6 +122,19 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		// Spustí inicializaci.
 		initGUI();
+		
+		// Vycentrování okna.
+		centerFrame();
+	}
+	
+	
+	/**
+	 * Vycentruje okno.
+	 */
+	private void centerFrame()
+	{
+		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(((screenDim.width - getSize().width) / 2), (screenDim.height - getSize().height) / 2);
 	}
 
 
@@ -549,9 +562,6 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		// Zabalíme připravený frame.
 		pack();
-
-		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation(((screenDim.width - getSize().width) / 2), (screenDim.height - getSize().height) / 2);
 	}
 
 
