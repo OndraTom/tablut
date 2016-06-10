@@ -449,15 +449,11 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 						{
 							if (manager.getWinner() == 0)
 							{
-								String infoText = statusBar.getInfoText();
-
 								startThinking();
 								int[][] bestMove = manager.getBestMove();
 								stopThinking();
 
-								statusBar.setInfoText(infoText);
-
-								JOptionPane.showMessageDialog(null, "Best move: " +
+								statusBar.setInfoText("Best move: " +
 										TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
 										TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
 										"  >  " +
@@ -582,6 +578,9 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		statusBar.setBlindMovesCount(manager.getBlindMovesCount());
 		statusBar.setCaptivesCounts(manager.getRussiansCaptivesCount(), manager.getSwedesCaptivesCount());
+		
+		// Vyčistíme info text.
+		statusBar.clearInfoText();
 
 		// Pokud máme výherce, tak jej zobrazíme ve status baru.
 		setWinnerText();
@@ -656,6 +655,12 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	{
 		statusBar.clearInfoText();
 		setEnabled(true);
+	}
+	
+	
+	public void showMoveHint(int[] from, int[] to)
+	{
+		statusBar.setInfoText("");
 	}
 
 
