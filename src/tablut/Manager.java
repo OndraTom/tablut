@@ -496,6 +496,14 @@ public class Manager implements ActionListener, HistoryListListener
 			// Hráč musí táhnout na prázdné pole.
 			if (!board.isCoordBlank(new int[]{x, y}))
 			{
+				// Hráč klikl na svůj kámen - nastavíme ho tedy jako nový tah "z".
+				if (this.isPlayerOnMoveSquare(x, y))
+				{
+					unmarkSquare(moveFrom[0], moveFrom[1]);
+					moveFrom = new int[]{x, y};
+					markSquare(x, y);
+				}
+
 				return;
 			}
 
