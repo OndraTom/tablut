@@ -157,7 +157,14 @@ public class TablutSquare extends JButton
 	{
 		this.isMarkedAsHint = true;
 
-		setBackground(new Color(240, 240, 240));
+		if (this.isProtected)
+		{
+			setBackground(new Color(217, 217, 39));
+		}
+		else
+		{
+			setBackground(new Color(240, 240, 240));
+		}
 	}
 
 

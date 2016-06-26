@@ -477,6 +477,9 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 								int[][] bestMove = manager.getBestMove();
 								stopThinking();
 
+								markSquareAsHint(bestMove[0][0], bestMove[0][1]);
+								markSquareAsHint(bestMove[1][0], bestMove[1][1]);
+
 								statusBar.setInfoText("Best move: " +
 										TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
 										TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
