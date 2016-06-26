@@ -17,6 +17,15 @@ public interface MarkSquareListener extends java.util.EventListener
 
 
 	/**
+	 * Označí pole jako nápovědu tahu.
+	 *
+	 * @param x
+	 * @param y
+	 */
+	public void markSquareAsHint(int x, int y);
+
+
+	/**
 	 * Odoznačení pole.
 	 *
 	 * @param x

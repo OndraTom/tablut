@@ -56,6 +56,12 @@ public class TablutSquare extends JButton
 
 
 	/**
+	 * Příznak pro označení pole jako nápovědy pro tah.
+	 */
+	private boolean isMarkedAsHint = false;
+
+
+	/**
 	 * @param x
 	 * @param y
 	 * @param value
@@ -145,10 +151,34 @@ public class TablutSquare extends JButton
 
 
 	/**
+	 * Označí pole jako nápovědu.
+	 */
+	public void markAsHint()
+	{
+		this.isMarkedAsHint = true;
+
+		setBackground(new Color(240, 240, 240));
+	}
+
+
+	/**
+	 * Zjistí, zda-li je pole označeno jako nápověda.
+	 *
+	 * @return
+	 */
+	public boolean isMarkedAsHint()
+	{
+		return isMarkedAsHint;
+	}
+
+
+	/**
 	 * Odoznačí pole.
 	 */
 	public void unmark()
 	{
+		this.isMarkedAsHint = false;
+
 		setDefaultBackground();
 	}
 

@@ -122,12 +122,12 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		// Spustí inicializaci.
 		initGUI();
-		
+
 		// Vycentrování okna.
 		centerFrame();
 	}
-	
-	
+
+
 	/**
 	 * Vycentruje okno.
 	 */
@@ -198,10 +198,34 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 
 	@Override
-	public void unmarkSquare(int x, int y)
+	public void markSquareAsHint(int x, int y)
 	{
 		TablutSquare s = (TablutSquare) squares[x][y];
-		s.unmark();
+		s.markAsHint();
+	}
+
+
+	@Override
+	public void unmarkSquare(int x, int y)
+	{
+		// Dvourozměrné pole hrací desky - řádek, sloupec.
+		int[][] board = this.board.getBoard();
+
+		// Projdeme všechny pole hrací desky.
+		for (int i = 0; i < board.length; i++)
+		{
+			for (int j = 0; j < board[i].length; j++)
+			{
+				TablutSquare s = (TablutSquare) squares[i][j];
+
+				// Pokud jde o pole na uvedených souřadnicích nebo o nápovědné
+				// pole, tak jej odoznačíme.
+				if ((x == i && y == j) || s.isMarkedAsHint())
+				{
+					s.unmark();
+				}
+			}
+		}
 	}
 
 
@@ -578,7 +602,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		statusBar.setBlindMovesCount(manager.getBlindMovesCount());
 		statusBar.setCaptivesCounts(manager.getRussiansCaptivesCount(), manager.getSwedesCaptivesCount());
-		
+
 		// Vyčistíme info text.
 		statusBar.clearInfoText();
 
@@ -656,8 +680,8 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		statusBar.clearInfoText();
 		setEnabled(true);
 	}
-	
-	
+
+
 	public void showMoveHint(int[] from, int[] to)
 	{
 		statusBar.setInfoText("");

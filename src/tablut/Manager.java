@@ -374,6 +374,9 @@ public class Manager implements ActionListener, HistoryListListener
 	/**
 	 * Obvolá posluchače označení pole.
 	 *
+	 * Kromě samotného označení pole s kamenem pro táhnutí označíme také
+	 * pole na které hráč může táhnout (nápověda).
+	 *
 	 * @param x
 	 * @param y
 	 */
@@ -382,6 +385,12 @@ public class Manager implements ActionListener, HistoryListListener
 		for (MarkSquareListener l : markSquareListeners)
 		{
 			l.markSquare(x, y);
+
+			// Označíme nápovědné tahy.
+			for (int[] move : judge.getPossibleMoves(new int[]{x, y}))
+			{
+				l.markSquareAsHint(move[0], move[1]);
+			}
 		}
 	}
 
