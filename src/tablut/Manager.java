@@ -895,6 +895,12 @@ public class Manager implements ActionListener, HistoryListListener
 
 			try
 			{
+				// Pokud je hra pozastavena, přeskočíme na začátek cyklu.
+				if (isGamePaused())
+				{
+					continue;
+				}
+
 				// Zkontrolujeme, zda-li je tah validní.
 				if (judge.isMoveValid(moveFrom, moveTo))
 				{
