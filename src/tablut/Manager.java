@@ -110,6 +110,12 @@ public class Manager implements ActionListener, HistoryListListener
 
 
 	/**
+	 * Příznak pro úplné zastavení manažera.
+	 */
+	private boolean isStopped = false;
+
+
+	/**
 	 * @param playerA		index hráče č. 1
 	 * @param playerB		index hráče č. 2
 	 * @param difficultyA	obtížnost hráče č. 1
@@ -144,6 +150,15 @@ public class Manager implements ActionListener, HistoryListListener
 		this.board			= board;
 		this.judge			= new Judge(board);
 		this.history		= history;
+	}
+
+
+	/**
+	 * Zastavení manažera - přerušení hlavní smyčky.
+	 */
+	public void stop()
+	{
+		this.isStopped = true;
 	}
 
 
@@ -415,7 +430,7 @@ public class Manager implements ActionListener, HistoryListListener
 	 */
 	private void clearMoves()
 	{
-		if (moveFrom != null && moveTo != null)
+		if (isPlayerOnMoveHuman() && moveFrom != null && moveTo != null)
 		{
 			unmarkSquare(moveFrom[0], moveFrom[1]);
 			unmarkSquare(moveTo[0], moveTo[1]);
@@ -806,8 +821,8 @@ public class Manager implements ActionListener, HistoryListListener
 	 */
 	public void startGameLoop() throws InterruptedException, ManagerException
 	{
-		// Smyčka běží, dokud není definován vítěz nebo nebylo dosaženo maximálního počtu tahů.
-		while (!isGameOver())
+		// Smyčka běží, dokud není definován vítěz, nebylo dosaženo maximálního počtu tahů nebo nedošlo k přerušení.
+		while (!isGameOver() && !isStopped)
 		{
 			// Pokud je hráčem na tahu člověk a nebyl nastaven tah, tak aplikace čeká.
 			if (this.isPlayerOnMoveHuman() && !this.isMoveSet())

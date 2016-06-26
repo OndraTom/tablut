@@ -188,6 +188,9 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	 */
 	private void newGame()
 	{
+		// Zastaví běh manažera.
+		this.manager.stop();
+
 		// Vytvoří úvodní options.
 		this.options.setVisible(true);
 
@@ -441,6 +444,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 							try
 							{
+								manager.stop();
 								loadGame(storage.load(f));
 							}
 							catch (StorageException se)
