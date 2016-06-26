@@ -680,7 +680,6 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	@Override
 	public void startThinking()
 	{
-		setEnabled(false);
 		statusBar.setInfoText("PC is thinking...");
 	}
 
@@ -692,7 +691,6 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	public void stopThinking()
 	{
 		statusBar.clearInfoText();
-		setEnabled(true);
 	}
 
 

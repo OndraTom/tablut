@@ -672,7 +672,7 @@ public class Manager implements ActionListener, HistoryListListener
 	public void actionPerformed(ActionEvent evt)
 	{
 		// Kliknutí na hrací pole.
-		if (evt.getSource() instanceof TablutSquare && !this.isGameOver())
+		if (isPlayerOnMoveHuman() && evt.getSource() instanceof TablutSquare && !this.isGameOver())
 		{
 			TablutSquare square = (TablutSquare) evt.getSource();
 			this.addMove(square.getXCoord(), square.getYCoord());
@@ -918,6 +918,8 @@ public class Manager implements ActionListener, HistoryListListener
 				// Pokud je hra pozastavena, přeskočíme na začátek cyklu.
 				if (isPlayerOnMoveComputer() && isGamePaused())
 				{
+					moveFrom	= null;
+					moveTo		= null;
 					continue;
 				}
 
