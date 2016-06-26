@@ -446,7 +446,7 @@ public class Manager implements ActionListener, HistoryListListener
 	 *
 	 * @return
 	 */
-	private boolean isPlayerOnMoveHuman()
+	public boolean isPlayerOnMoveHuman()
 	{
 		return (this.getPlayer() instanceof HumanPlayer);
 	}

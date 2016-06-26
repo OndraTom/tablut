@@ -1,6 +1,5 @@
 package tablut;
 
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 /**
@@ -24,6 +23,11 @@ public class PcPlayPauseButton extends JButton
 		else
 		{
 			setText("PC - pause");
+		}
+
+		if (manager.isPlayerOnMoveHuman())
+		{
+			this.setEnabled(false);
 		}
 
 		addActionListener(manager);
