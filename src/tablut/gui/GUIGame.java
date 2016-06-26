@@ -620,6 +620,12 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		// Vyčistíme info text.
 		statusBar.clearInfoText();
 
+		// Pokud je na tahu PC a hra není pozastavena, vykreslíme situaci.
+		if (manager.isPlayerOnMoveComputer() && !manager.isGamePaused())
+		{
+			startThinking();
+		}
+
 		// Pokud máme výherce, tak jej zobrazíme ve status baru.
 		setWinnerText();
 
