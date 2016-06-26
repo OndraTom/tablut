@@ -40,6 +40,12 @@ import tablut.listeners.PcIsThinkingListener;
 public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, ChangePlayersSettingsListener, PcIsThinkingListener, MarkSquareListener
 {
 	/**
+	 * Nastavení hry.
+	 */
+	private GUIOptions options;
+
+
+	/**
 	 * Manažer - řídí běh celé hry.
 	 */
 	private Manager manager;
@@ -104,13 +110,14 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	 *
 	 * @param manager
 	 */
-	public GUIGame(Manager manager)
+	public GUIGame(Manager manager, GUIOptions options)
 	{
 		// Zrušíme možnost roztahovat okno.
 		this.setResizable(false);
 
 		// Nastavení objektů GUI.
 		setManager(manager);
+		this.options			= options;
 		this.board				= manager.getPlayBoard();
 		this.history			= manager.getHistory();
 		this.storage			= new Storage();
@@ -182,7 +189,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	private void newGame()
 	{
 		// Vytvoří úvodní options.
-		new GUIOptions().setVisible(true);
+		this.options.setVisible(true);
 
 		// Skryje aktivní okno.
 		this.setVisible(false);

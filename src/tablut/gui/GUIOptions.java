@@ -137,7 +137,7 @@ public class GUIOptions extends javax.swing.JFrame implements LoadGameListener
 	private void kickTheGame(Manager manager)
 	{
 		// Vytvoří GUI - předá manažera.
-		gui = new GUIGame(manager);
+		gui = new GUIGame(manager, this);
 
 		gui.addLoadGameListener(this);
 
