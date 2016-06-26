@@ -115,15 +115,19 @@ public class GUIHistoryList extends JList
 			@Override
 			public void focusGained(FocusEvent e)
 			{
-				for (HistoryListListener listener : listeners)
+				// Akci provedeme pouze pokud je v seznamu nějaká položka.
+				if (getModel().getSize() > 0)
 				{
-					try
+					for (HistoryListListener listener : listeners)
 					{
-						listener.goToHistoryItem(getSelectedIndex());
-					}
-					catch (HistoryException ex)
-					{
-						JOptionPane.showMessageDialog(null, ex.getMessage());
+						try
+						{
+							listener.goToHistoryItem(getSelectedIndex());
+						}
+						catch (HistoryException ex)
+						{
+							JOptionPane.showMessageDialog(null, ex.getMessage());
+						}
 					}
 				}
 			}
