@@ -453,6 +453,17 @@ public class Manager implements ActionListener, HistoryListListener
 
 
 	/**
+	 * Zkontroluje, zda-li je hráčem na tahu počítač.
+	 *
+	 * @return
+	 */
+	public boolean isPlayerOnMoveComputer()
+	{
+		return (this.getPlayer() instanceof ComputerPlayer);
+	}
+
+
+	/**
 	 * Zjistí, zda-li je ve hře lidský hráč.
 	 *
 	 * @return
@@ -742,6 +753,15 @@ public class Manager implements ActionListener, HistoryListListener
 
 
 	/**
+	 * Obnoví hru.
+	 */
+	private void resumeGame()
+	{
+		gamePaused = false;
+	}
+
+
+	/**
 	 * Zjistí, jestli je hra pozastavená.
 	 *
 	 * @return
@@ -896,7 +916,7 @@ public class Manager implements ActionListener, HistoryListListener
 			try
 			{
 				// Pokud je hra pozastavena, přeskočíme na začátek cyklu.
-				if (isGamePaused())
+				if (isPlayerOnMoveComputer() && isGamePaused())
 				{
 					continue;
 				}
@@ -913,7 +933,6 @@ public class Manager implements ActionListener, HistoryListListener
 					{
 						winner = TablutSquare.RUSSIAN;
 					}
-
 					// Pokud byl král zachráněn, nastavíme vítěze a vypíšeme zprávu.
 					else if (judge.isKingSave())
 					{
@@ -921,6 +940,13 @@ public class Manager implements ActionListener, HistoryListListener
 					}
 					else
 					{
+						// Pokud hraje člověk proti počítači, tak po vykonání tahu
+						// obnovíme hru (aby PC nebyl zbytečně pausnutý).
+						if (this.isPlayerOnMoveHuman() && this.isComputerPlayerInGame())
+						{
+							this.resumeGame();
+						}
+
 						// Vyměníme hráče na tahu.
 						this.changePlayerOnMove();
 					}
