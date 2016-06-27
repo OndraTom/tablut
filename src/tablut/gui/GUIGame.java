@@ -467,9 +467,13 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 								loadGame(storage.load(f));
 								manager.stop();
 							}
+							catch (NullPointerException ne)
+							{
+								System.out.println(ne.getMessage());
+							}
 							catch (StorageException se)
 							{
-								System.out.println(se.getMessage());
+								JOptionPane.showMessageDialog(null, se.getMessage());
 							}
 						}
 					});

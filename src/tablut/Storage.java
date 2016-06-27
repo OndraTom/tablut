@@ -459,12 +459,13 @@ public class Storage
 	 * @param file
 	 * @return
 	 * @throws StorageException
+	 * @throws NullPointerException
 	 */
-	public Manager load(File file) throws StorageException
+	public Manager load(File file) throws StorageException, NullPointerException
 	{
 		if (file == null)
 		{
-			throw new StorageException("Loading failed: no file selected.");
+			throw new NullPointerException("Loading failed: no file selected.");
 		}
 
 		Document doc = parseXmlFile(file);

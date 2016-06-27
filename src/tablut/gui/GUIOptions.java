@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import tablut.GameThread;
 import tablut.Manager;
@@ -115,9 +116,13 @@ public class GUIOptions extends javax.swing.JFrame implements LoadGameListener
 						{
 							loadGame(storage.load(f));
 						}
+						catch (NullPointerException ne)
+						{
+							System.out.println(ne.getMessage());
+						}
 						catch (StorageException se)
 						{
-							System.out.println(se.getMessage());
+							JOptionPane.showMessageDialog(null, se.getMessage());
 						}
 					}
 				});
