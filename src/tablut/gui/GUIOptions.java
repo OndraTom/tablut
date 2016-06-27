@@ -16,6 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import tablut.GameThread;
 import tablut.Manager;
 import tablut.Storage;
+import tablut.events.ChangePlayersSettingsEvent;
 
 /**
  * GUI pro nastavení parametrů hry.
@@ -340,6 +341,21 @@ public class GUIOptions extends javax.swing.JFrame implements LoadGameListener
 	public void loadGame(final LoadGameEvent event)
 	{
 		loadGame(event.getManager());
+	}
+
+
+	/**
+	 * Načte nastavení které bylo změněno uprostřed hry.
+	 *
+	 * @param event
+	 */
+	public void loadSettings(ChangePlayersSettingsEvent event)
+	{
+		russianPlayer.setSelectedIndex(event.getPlayerATypeIndex());
+		difficultyRussians.setSelectedIndex(event.getPlayerADifficultyIndex() - 1);
+
+		swedePlayer.setSelectedIndex(event.getPlayerBTypeIndex());
+		difficultySwedes.setSelectedIndex(event.getPlayerBDifficultyIndex() - 1);
 	}
 
 

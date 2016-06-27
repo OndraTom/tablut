@@ -696,6 +696,8 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 			manager.setPlayerB(new HumanPlayer());
 		}
 
+		this.options.loadSettings(event);
+
 		changeGUI(manager);
 	}
 
