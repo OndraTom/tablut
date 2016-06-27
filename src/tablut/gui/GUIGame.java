@@ -299,7 +299,14 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 	{
 		JPanel buttonPanel = new JPanel();
 
-		buttonPanel.add(new PcPlayPauseButton(manager));
+		PcPlayPauseButton playPauseButton = new PcPlayPauseButton(manager);
+
+		if (manager.isGameOver())
+		{
+			playPauseButton.setEnabled(false);
+		}
+
+		buttonPanel.add(playPauseButton);
 
 		return buttonPanel;
 	}
@@ -316,6 +323,11 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 		historyList.addListener(manager);
 		historyList.setCellRenderer(new GUIHistoryListCellRenderer(manager.getPlayerOnMove(), historyList.getSelectedIndex()));
+
+		if (manager.isGameOver())
+		{
+			historyList.setEnabled(false);
+		}
 
 		// Vytvoříme a vátíme scrollovací panel z listu.
 		return new GUIHistoryScrollPane(historyList);
@@ -335,7 +347,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		JButton undoButton = new UndoButton();
 		undoButton.setPreferredSize(new Dimension(125, 25));
 		undoButton.addActionListener(manager);
-		if (history.getUndoItems().isEmpty())
+		if (history.getUndoItems().isEmpty() || manager.isGameOver())
 		{
 			undoButton.setEnabled(false);
 		}
@@ -344,7 +356,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		JButton redoButton = new RedoButton();
 		redoButton.setPreferredSize(new Dimension(125, 25));
 		redoButton.addActionListener(manager);
-		if (history.getRedoItems().isEmpty())
+		if (history.getRedoItems().isEmpty() || manager.isGameOver())
 		{
 			redoButton.setEnabled(false);
 		}
@@ -389,44 +401,52 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 			}
 		);
 
-		options.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
+		if (manager.isGameOver())
+		{
+			save.setEnabled(false);
+			options.setEnabled(false);
+		}
+		else
+		{
+			options.addActionListener(new ActionListener()
 				{
-					playersSettings.setVisible(true);
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						playersSettings.setVisible(true);
+					}
 				}
-			}
-		);
+			);
 
-		save.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
+			save.addActionListener(new ActionListener()
 				{
-					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setAcceptAllFileFilterUsed(false);
-					fileChooser.setFileFilter(new FileNameExtensionFilter("XML files", "xml"));
-					fileChooser.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							JFileChooser s = (JFileChooser) e.getSource();
-							File f = s.getSelectedFile();
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						JFileChooser fileChooser = new JFileChooser();
+						fileChooser.setAcceptAllFileFilterUsed(false);
+						fileChooser.setFileFilter(new FileNameExtensionFilter("XML files", "xml"));
+						fileChooser.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								JFileChooser s = (JFileChooser) e.getSource();
+								File f = s.getSelectedFile();
 
-							try
-							{
-								storage.save(manager, f);
+								try
+								{
+									storage.save(manager, f);
+								}
+								catch (StorageException se)
+								{
+									System.out.println(se.getMessage());
+								}
 							}
-							catch (StorageException se)
-							{
-								System.out.println(se.getMessage());
-							}
-						}
-					});
-					fileChooser.showSaveDialog(null);
+						});
+						fileChooser.showSaveDialog(null);
+					}
 				}
-			}
-		);
+			);
+		}
 
 		load.addActionListener(new ActionListener()
 			{

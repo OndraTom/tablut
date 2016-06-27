@@ -786,7 +786,7 @@ public class Manager implements ActionListener, HistoryListListener
 	 *
 	 * @return
 	 */
-	private boolean isGameOver()
+	public boolean isGameOver()
 	{
 		return winner > 0 || this.judge.isBlindMovesCountReached();
 	}
