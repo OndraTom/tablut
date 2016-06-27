@@ -159,11 +159,11 @@ public class TablutSquare extends JButton
 
 		if (this.isProtected)
 		{
-			setBackground(new Color(217, 217, 39));
+			setBackground(new Color(200, 200, 40));
 		}
 		else
 		{
-			setBackground(new Color(240, 240, 240));
+			setBackground(new Color(230, 230, 230));
 		}
 	}
 
