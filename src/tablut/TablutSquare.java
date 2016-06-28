@@ -211,7 +211,7 @@ public class TablutSquare extends JButton
 					g2d.setColor(Color.BLACK);
 					break;
 				case 2:
-					g2d.setColor(Color.RED);
+					g2d.setColor(Color.BLUE);
 					break;
 				case 3:
 					g2d.setColor(Color.ORANGE);

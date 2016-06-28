@@ -42,7 +42,7 @@ public class GUIHistoryListCellRenderer extends DefaultListCellRenderer implemen
 		}
 		else
 		{
-			setForeground(Color.RED);
+			setForeground(Color.BLUE);
 		}
 
 		return c;

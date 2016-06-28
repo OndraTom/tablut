@@ -112,7 +112,7 @@ public class GUIStatusBar extends JPanel
 	 */
 	private void setCaptivesCountLabel()
 	{
-		captivesCountsLabel.setText("<html>Captives: " + russiansCaptivesCount + " / <font color='red'>" + swedesCaptivesCount + "</font></html>");
+		captivesCountsLabel.setText("<html>Captives: " + russiansCaptivesCount + " / <font color='blue'>" + swedesCaptivesCount + "</font></html>");
 	}
 
 
