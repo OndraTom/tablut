@@ -21,7 +21,7 @@ public class GUIStatusBar extends JPanel
 	/**
 	 * Počet zahraných tahů, bez zajmutí.
 	 */
-	private int blindMovesCount = 0;
+	private int blindMovesCount;
 
 
 	/**
@@ -63,11 +63,12 @@ public class GUIStatusBar extends JPanel
 	/**
 	 * @param blindMovesCountLimit
 	 */
-	public GUIStatusBar(int blindMovesCountLimit)
+	public GUIStatusBar(int blindMovesCount, int blindMovesCountLimit)
 	{
 		super(new GridLayout(1, 0));
 		setPreferredSize(new Dimension(100, 20));
 
+		this.blindMovesCount		= blindMovesCount;
 		this.blindMovesCountLimit	= blindMovesCountLimit;
 		this.blindMovesCountLabel	= new JLabel();
 		this.captivesCountsLabel	= new JLabel();

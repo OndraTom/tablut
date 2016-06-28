@@ -188,6 +188,17 @@ public class Manager implements ActionListener, HistoryListListener
 
 
 	/**
+	 * Nastaví počet zahraných tahů, bez zajmutí.
+	 *
+	 * @param blindMovesCount
+	 */
+	public void setBlindMovesCount(int blindMovesCount)
+	{
+		judge.setBlindMovesCount(blindMovesCount);
+	}
+
+
+	/**
 	 * Vrátí příznak toho, zda-li je ve hře počítačový hráč.
 	 *
 	 * @return

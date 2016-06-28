@@ -118,7 +118,7 @@ public class Storage
 	private Element makeHistoryListElement(List<HistoryItem> list, String type, Document dom)
 	{
 		Element listE = dom.createElement(type + "s");
-		Element itemE, from, to, playerOnTheMove;
+		Element itemE, from, to, playerOnTheMove, blindMovesCount;
 		for (HistoryItem item : list)
 		{
 			itemE = dom.createElement(type);
@@ -134,9 +134,13 @@ public class Storage
 			playerOnTheMove = dom.createElement("playerOnTheMove");
 			playerOnTheMove.setTextContent(Integer.toString(item.getPlayerOnMove()));
 
+			blindMovesCount = dom.createElement("blindMoves");
+			blindMovesCount.setTextContent(Integer.toString(item.getBlindMovesCount()));
+
 			itemE.appendChild(from);
 			itemE.appendChild(to);
 			itemE.appendChild(playerOnTheMove);
+			itemE.appendChild(blindMovesCount);
 			itemE.appendChild(makeBoardElement(item.getBoard(), dom));
 
 			listE.appendChild(itemE);
@@ -187,9 +191,7 @@ public class Storage
 
 		try
 		{
-			Document doc = dfc.newDocumentBuilder().parse(file);
-
-			return doc;
+			return dfc.newDocumentBuilder().parse(file);
 		}
 		catch (ParserConfigurationException | SAXException | IOException e)
 		{
@@ -285,6 +287,30 @@ public class Storage
 
 
 	/**
+	 * Vrátí počet tahů bez zajmutí kamene.
+	 *
+	 * @param blindMovesCount
+	 * @return
+	 * @throws StorageException
+	 */
+	private int makeBlindMovesCountFromElement(Node blindMovesCount) throws StorageException
+	{
+		Element blindMovesCountElement = (Element) blindMovesCount;
+
+		try
+		{
+			validator.validateBlindMovesCount(blindMovesCountElement);
+		}
+		catch (ValidatorException ve)
+		{
+			throw new StorageException(ve.getMessage());
+		}
+
+		return Integer.parseInt(blindMovesCountElement.getTextContent());
+	}
+
+
+	/**
 	 * Vrátí hrací desku z dat.
 	 *
 	 * @param boardElement
@@ -341,13 +367,15 @@ public class Storage
 			Element fromElement = (Element) itemElement.getElementsByTagName("from").item(0);
 			Element toElement = (Element) itemElement.getElementsByTagName("to").item(0);
 			Element playerOnTheMoveElement = (Element) itemElement.getElementsByTagName("playerOnTheMove").item(0);
+			Element blindMovesElement = (Element) itemElement.getElementsByTagName("blindMoves").item(0);
 			Node boardElement = itemElement.getElementsByTagName("board").item(0);
 
 			int[] from = {Integer.parseInt(fromElement.getAttribute("x")), Integer.parseInt(fromElement.getAttribute("y"))};
 			int[] to = {Integer.parseInt(toElement.getAttribute("x")), Integer.parseInt(toElement.getAttribute("y"))};
 			int playerOnTheMove = Integer.parseInt(playerOnTheMoveElement.getTextContent());
+			int blindMoves = Integer.parseInt(blindMovesElement.getTextContent());
 
-			HistoryItem hItem = new HistoryItem(playerOnTheMove, makeBoardFromElement(boardElement), from, to, 0);
+			HistoryItem hItem = new HistoryItem(playerOnTheMove, makeBoardFromElement(boardElement), from, to, blindMoves);
 
 			if (type.equals("undo"))
 			{
@@ -434,6 +462,10 @@ public class Storage
 			element.setTextContent(Integer.toString(manager.getWinner()));
 			root.appendChild(element);
 
+			element = dom.createElement("blindMoves");
+			element.setTextContent(Integer.toString(manager.getBlindMovesCount()));
+			root.appendChild(element);
+
 			root.appendChild(makeBoardElement(manager.getPlayBoard(), dom));
 			root.appendChild(makeHistoryElement(manager.getHistory(), dom));
 
@@ -475,11 +507,16 @@ public class Storage
 
 		int playerOnMove = makePlayerOnMoveFromElement(doc.getElementsByTagName("playerOnMove").item(0));
 		int winner = makeWinnerFromElement(doc.getElementsByTagName("winner").item(0));
+		int blindMoves = makeBlindMovesCountFromElement(doc.getElementsByTagName("blindMoves").item(0));
 
 		PlayBoard board = makeBoardFromElement(doc.getElementsByTagName("board").item(0));
 
 		History history = makeHistoryFromElement(doc.getElementsByTagName("history").item(0));
 
-		return new Manager(playerA, playerB, playerOnMove, winner, board, history);
+		Manager manager = new Manager(playerA, playerB, playerOnMove, winner, board, history);
+
+		manager.setBlindMovesCount(blindMoves);
+
+		return manager;
 	}
 }

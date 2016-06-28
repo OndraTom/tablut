@@ -122,7 +122,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 		this.history			= manager.getHistory();
 		this.storage			= new Storage();
 		this.playersSettings	= new GUIPlayersSettings(manager);
-		this.statusBar			= new GUIStatusBar(Judge.BLIND_MOVES_MAX_COUNT);
+		this.statusBar			= new GUIStatusBar(manager.getBlindMovesCount(), Judge.BLIND_MOVES_MAX_COUNT);
 
 		// Nastaví GUI jako posluchače pro událost změny nastavení hráčů.
 		playersSettings.addListener(this);

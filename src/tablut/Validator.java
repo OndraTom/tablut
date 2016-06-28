@@ -111,6 +111,28 @@ public class Validator
 
 
 	/**
+	 * Validuje počet tahů bez zajmutí kamene.
+	 *
+	 * @param blindMovesCount
+	 * @throws ValidatorException
+	 */
+	public void validateBlindMovesCount(Element blindMovesCount) throws ValidatorException
+	{
+		if (blindMovesCount == null)
+		{
+			throw new ValidatorException("Blind moves count is not defined");
+		}
+
+		int val = Integer.parseInt(blindMovesCount.getTextContent());
+
+		if (val < 0 || val > Judge.BLIND_MOVES_MAX_COUNT)
+		{
+			throw new ValidatorException("Blind moves count has bad value.");
+		}
+	}
+
+
+	/**
 	 * Validuje hrací desku.
 	 *
 	 * @param board
@@ -197,11 +219,13 @@ public class Validator
 			Element fromElement = (Element) itemElement.getElementsByTagName("from").item(0);
 			Element toElement = (Element) itemElement.getElementsByTagName("to").item(0);
 			Element playerOnTheMoveElement = (Element) itemElement.getElementsByTagName("playerOnTheMove").item(0);
+			Element blindMoves = (Element) itemElement.getElementsByTagName("blindMoves").item(0);
 			Element boardElement = (Element) itemElement.getElementsByTagName("board").item(0);
 
 			validateCoordinate(fromElement);
 			validateCoordinate(toElement);
 			validatePlayerOnMove(playerOnTheMoveElement);
+			validateBlindMovesCount(blindMoves);
 			validateBoard(boardElement);
 		}
 	}
