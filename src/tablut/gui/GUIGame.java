@@ -492,52 +492,59 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 			}
 		);
 
-		bestMove.addActionListener(new ActionListener()
+		if (manager.isPlayerOnMoveHuman())
 		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+			bestMove.addActionListener(new ActionListener()
 			{
-				// Nápovědu nejlepšího tahu pustíme v novém vlákně.
-				Thread thread = new Thread(new Runnable() {
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					// Nápovědu nejlepšího tahu pustíme v novém vlákně.
+					Thread thread = new Thread(new Runnable() {
 
-					@Override
-					public void run() {
+						@Override
+						public void run() {
 
-						try
-						{
-							if (manager.getWinner() == 0)
+							try
 							{
-								startThinking();
-								int[][] bestMove = manager.getBestMove();
-								stopThinking();
+								if (manager.getWinner() == 0)
+								{
+									startThinking();
+									int[][] bestMove = manager.getBestMove();
+									stopThinking();
 
-								markSquareAsHint(bestMove[0][0], bestMove[0][1]);
-								markSquareAsHint(bestMove[1][0], bestMove[1][1]);
+									markSquareAsHint(bestMove[0][0], bestMove[0][1]);
+									markSquareAsHint(bestMove[1][0], bestMove[1][1]);
 
-								statusBar.setInfoText("Best move: " +
-										TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
-										TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
-										"  >  " +
-										TablutCoordinate.getCoordinateText(bestMove[1][1], "horizontal") +
-										TablutCoordinate.getCoordinateText(bestMove[1][0], "vertical"));
+									statusBar.setInfoText("Best move: " +
+											TablutCoordinate.getCoordinateText(bestMove[0][1], "horizontal") +
+											TablutCoordinate.getCoordinateText(bestMove[0][0], "vertical") +
+											"  >  " +
+											TablutCoordinate.getCoordinateText(bestMove[1][1], "horizontal") +
+											TablutCoordinate.getCoordinateText(bestMove[1][0], "vertical"));
+								}
+								else
+								{
+									JOptionPane.showMessageDialog(null, "Game over - your best move is to start new one :)");
+								}
 							}
-							else
+							catch (PlayerException pe)
 							{
-								JOptionPane.showMessageDialog(null, "Game over - your best move is to start new one :)");
+								JOptionPane.showMessageDialog(null, pe.getMessage());
 							}
-						}
-						catch (PlayerException pe)
-						{
-							JOptionPane.showMessageDialog(null, pe.getMessage());
+
 						}
 
-					}
+					});
 
-				});
-
-				thread.start();
-			}
-		});
+					thread.start();
+				}
+			});
+		}
+		else
+		{
+			bestMove.setEnabled(false);
+		}
 
 		rules.addActionListener(new ActionListener()
 		{
