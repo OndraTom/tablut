@@ -333,6 +333,8 @@ public class GUIOptions extends javax.swing.JFrame implements LoadGameListener
 			gui.setVisible(false);
 		}
 
+		this.setVisible(false);
+
 		kickTheGame(manager);
 	}
 

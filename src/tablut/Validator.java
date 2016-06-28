@@ -41,7 +41,7 @@ public class Validator
 			Element difficulty = (Element) player.getElementsByTagName("difficulty").item(0);
 			if (difficulty == null || !difficulty.getNodeName().trim().equals("difficulty"))
 			{
-				throw new ValidatorException("Player has not defined difficulty.");
+				throw new ValidatorException("Computer player has not defined difficulty.");
 			}
 
 			int difficultyValue = Integer.parseInt(difficulty.getTextContent().trim());
