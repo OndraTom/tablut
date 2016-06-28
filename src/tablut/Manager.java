@@ -115,6 +115,9 @@ public class Manager implements ActionListener, HistoryListListener
 	private boolean isStopped = false;
 
 
+	private boolean endAnnounced = false;
+
+
 	/**
 	 * @param playerA		index hráče č. 1
 	 * @param playerB		index hráče č. 2
@@ -616,6 +619,12 @@ public class Manager implements ActionListener, HistoryListListener
 			// Změníme hráče na tahu.
 			this.changePlayerOnMove();
 		}
+		// Při tahu zpět smažeme výherce - hru opět přivedeme k životu.
+		else
+		{
+			winner			= 0;
+			endAnnounced	= false;
+		}
 
 		// Nastavíme GUI.
 		this.clearMoves();
@@ -862,145 +871,157 @@ public class Manager implements ActionListener, HistoryListListener
 	public void startGameLoop() throws InterruptedException, ManagerException
 	{
 		// Smyčka běží, dokud není definován vítěz, nebylo dosaženo maximálního počtu tahů nebo nedošlo k přerušení.
-		while (!isGameOver() && !isStopped)
+		while (!isStopped)
 		{
-			// Pokud je hráčem na tahu člověk a nebyl nastaven tah, tak aplikace čeká.
-			if (this.isPlayerOnMoveHuman() && !this.isMoveSet())
+			if (!isGameOver())
 			{
-				Thread.sleep(50);
-				continue;
-			}
-
-			// Pokud je hráčem na tahu počítač a nebyl nastaven tah.
-			else if (!this.isPlayerOnMoveHuman() && !this.isMoveSet())
-			{
-				// Zaznamenáme čas začátku zpracování PC hráče.
-				long pcPlayerStartTime = System.currentTimeMillis();
-
-				// Pokud je hra pozastavena, tak aplikace čeká.
-				if (isGamePaused())
+				// Pokud je hráčem na tahu člověk a nebyl nastaven tah, tak aplikace čeká.
+				if (this.isPlayerOnMoveHuman() && !this.isMoveSet())
 				{
-					// Spinkej.
-					ComputerPlayer.stopThinking();
-
 					Thread.sleep(50);
 					continue;
 				}
-				else
+
+				// Pokud je hráčem na tahu počítač a nebyl nastaven tah.
+				else if (!this.isPlayerOnMoveHuman() && !this.isMoveSet())
 				{
-					// Budíček.
-					ComputerPlayer.startThinking();
+					// Zaznamenáme čas začátku zpracování PC hráče.
+					long pcPlayerStartTime = System.currentTimeMillis();
+
+					// Pokud je hra pozastavena, tak aplikace čeká.
+					if (isGamePaused())
+					{
+						// Spinkej.
+						ComputerPlayer.stopThinking();
+
+						Thread.sleep(50);
+						continue;
+					}
+					else
+					{
+						// Budíček.
+						ComputerPlayer.startThinking();
+					}
+
+					try
+					{
+						int[][] ignoredMove = null;
+
+						// Pokud pohyby oscilují, získáme ignorovaný tah.
+						if (isGameOscilating())
+						{
+							ignoredMovesDepth++;
+
+							HistoryItem ignoredItem = history.getUndoItems().get(
+									history.getUndoItems().size() - Judge.MOVES_OSCILATING_LIMIT
+							);
+
+							ignoredMove = new int[][]{ignoredItem.getMoveFrom(), ignoredItem.getMoveTo()};
+						}
+
+						// Vygeneruje nejlepší tah, podle danné obtížnosti.
+						int[][] computerMove = ComputerPlayer.getBestMove(judge, playerOnMove, getPlayerDifficulty(), ignoredMove, ignoredMovesDepth);
+
+						// Nastaví tah.
+						moveFrom = computerMove[0];
+						moveTo = computerMove[1];
+
+						// Vypne "PC thinking" mód.
+						ComputerPlayer.stopThinking();
+					}
+
+					// Při zachycení výjimky vypíše zprávu.
+					catch (PlayerException ex)
+					{
+						JOptionPane.showMessageDialog(null, ex.getMessage());
+						break;
+					}
+
+					// Zamezíme hře provést příliš rychlý tah.
+					while (System.currentTimeMillis() - pcPlayerStartTime < PC_PLAYER_DELAY)
+					{
+						Thread.sleep(50);
+					}
 				}
 
 				try
 				{
-					int[][] ignoredMove = null;
-
-					// Pokud pohyby oscilují, získáme ignorovaný tah.
-					if (isGameOscilating())
+					// Pokud je hra pozastavena, přeskočíme na začátek cyklu.
+					if (isPlayerOnMoveComputer() && isGamePaused())
 					{
-						ignoredMovesDepth++;
-
-						HistoryItem ignoredItem = history.getUndoItems().get(
-								history.getUndoItems().size() - Judge.MOVES_OSCILATING_LIMIT
-						);
-
-						ignoredMove = new int[][]{ignoredItem.getMoveFrom(), ignoredItem.getMoveTo()};
+						moveFrom	= null;
+						moveTo		= null;
+						continue;
 					}
 
-					// Vygeneruje nejlepší tah, podle danné obtížnosti.
-					int[][] computerMove = ComputerPlayer.getBestMove(judge, playerOnMove, getPlayerDifficulty(), ignoredMove, ignoredMovesDepth);
+					// Zkontrolujeme, zda-li je tah validní.
+					if (judge.isMoveValid(moveFrom, moveTo))
+					{
 
-					// Nastaví tah.
-					moveFrom = computerMove[0];
-					moveTo = computerMove[1];
+						// Zrahrajeme tah.
+						this.playMove();
 
-					// Vypne "PC thinking" mód.
-					ComputerPlayer.stopThinking();
+						// Pokud byl král zajat, nastavíme vítěze a vypíšeme zprávu.
+						if (judge.isKingCaptured())
+						{
+							winner = TablutSquare.RUSSIAN;
+						}
+						// Pokud byl král zachráněn, nastavíme vítěze a vypíšeme zprávu.
+						else if (judge.isKingSave())
+						{
+							winner = TablutSquare.SWEDEN;
+						}
+						else
+						{
+							// Pokud hraje člověk proti počítači, tak po vykonání tahu
+							// obnovíme hru (aby PC nebyl zbytečně pausnutý).
+							if (this.isPlayerOnMoveHuman() && this.isComputerPlayerInGame())
+							{
+								this.resumeGame();
+							}
+
+							// Vyměníme hráče na tahu.
+							this.changePlayerOnMove();
+						}
+
+						// Po zahrání tahu, je třeba aktualizovat GUI.
+						this.changeGUI();
+
+					}
+
+					// Pokud tah není validní, smažeme druhý tah a jedeme dál.
+					else
+					{
+						moveTo = null;
+					}
 				}
 
 				// Při zachycení výjimky vypíše zprávu.
-				catch (PlayerException ex)
+				catch (JudgeException ex)
 				{
 					JOptionPane.showMessageDialog(null, ex.getMessage());
-					break;
-				}
-
-				// Zamezíme hře provést příliš rychlý tah.
-				while (System.currentTimeMillis() - pcPlayerStartTime < PC_PLAYER_DELAY)
-				{
-					Thread.sleep(50);
 				}
 			}
-
-			try
+			else
 			{
-				// Pokud je hra pozastavena, přeskočíme na začátek cyklu.
-				if (isPlayerOnMoveComputer() && isGamePaused())
+				if (!endAnnounced)
 				{
-					moveFrom	= null;
-					moveTo		= null;
-					continue;
-				}
-
-				// Zkontrolujeme, zda-li je tah validní.
-				if (judge.isMoveValid(moveFrom, moveTo))
-				{
-
-					// Zrahrajeme tah.
-					this.playMove();
-
-					// Pokud byl král zajat, nastavíme vítěze a vypíšeme zprávu.
-					if (judge.isKingCaptured())
+					// Pokud byl dosažen max. počet tahů -> vypíšeme zprávu.
+					if (this.judge.isBlindMovesCountReached())
 					{
-						winner = TablutSquare.RUSSIAN;
-					}
-					// Pokud byl král zachráněn, nastavíme vítěze a vypíšeme zprávu.
-					else if (judge.isKingSave())
-					{
-						winner = TablutSquare.SWEDEN;
-					}
-					else
-					{
-						// Pokud hraje člověk proti počítači, tak po vykonání tahu
-						// obnovíme hru (aby PC nebyl zbytečně pausnutý).
-						if (this.isPlayerOnMoveHuman() && this.isComputerPlayerInGame())
-						{
-							this.resumeGame();
-						}
-
-						// Vyměníme hráče na tahu.
-						this.changePlayerOnMove();
+						JOptionPane.showMessageDialog(null, "You have reached maximum count of possible moves without taking a stone.");
 					}
 
-					// Po zahrání tahu, je třeba aktualizovat GUI.
-					this.changeGUI();
+					if (winner > 0)
+					{
+						announceWinner();
+					}
 
+					endAnnounced = true;
 				}
 
-				// Pokud tah není validní, smažeme druhý tah a jedeme dál.
-				else
-				{
-					moveTo = null;
-				}
+				Thread.sleep(50);
 			}
-
-			// Při zachycení výjimky vypíše zprávu.
-			catch (JudgeException ex)
-			{
-				JOptionPane.showMessageDialog(null, ex.getMessage());
-			}
-		}
-
-		// Pokud byl dosažen max. počet tahů -> vypíšeme zprávu.
-		if (this.judge.isBlindMovesCountReached())
-		{
-			JOptionPane.showMessageDialog(null, "You have reached maximum count of possible moves without taking a stone.");
-		}
-
-		if (winner > 0)
-		{
-			announceWinner();
 		}
 	}
 }
