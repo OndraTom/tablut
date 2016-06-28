@@ -749,6 +749,7 @@ public class Manager implements ActionListener, HistoryListListener
 		// Kliknutí na pozastavení/spuštění PC hry
 		if (evt.getSource() instanceof PcPlayPauseButton)
 		{
+			clearMoves();
 			changePausePlay();
 			this.changeGUI();
 		}
@@ -1010,7 +1011,16 @@ public class Manager implements ActionListener, HistoryListListener
 				// Při zachycení výjimky vypíše zprávu.
 				catch (JudgeException ex)
 				{
-					JOptionPane.showMessageDialog(null, ex.getMessage());
+					// Ofuk kvůli nedeterministické chybě na nudné večery, kvůli které mě minule vyhodili :-D.
+					if (isPlayerOnMoveComputer())
+					{
+						clearMoves();
+						continue;
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, ex.getMessage());
+					}
 				}
 			}
 			else

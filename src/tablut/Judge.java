@@ -198,6 +198,9 @@ public class Judge implements Cloneable
 		// Zkontroluje, zda-li se nesnažíme táhnout prázdným políčkem.
 		if (this.board.isCoordBlank(from))
 		{
+			//this.board.dumpCoordinates(from, to);
+			//this.board.dumpBoard();
+
 			throw new JudgeException("You are trying to move with blank field.");
 		}
 

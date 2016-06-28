@@ -333,6 +333,46 @@ public class PlayBoard implements Cloneable
 
 
 	/**
+	 * Vydumpuje desku na standaradní výstup.
+	 */
+	public void dumpBoard()
+	{
+		String row;
+		int i,j;
+
+		for (i = 0; i < board.length; i++)
+		{
+			row = "";
+
+			for (j = 0; j < board[i].length; j++)
+			{
+				row += Integer.toString(board[i][j]) + " | ";
+			}
+
+			System.out.println(row);
+		}
+	}
+
+
+	/**
+	 * Vydumpuje souřadnice na standrandní výstup.
+	 *
+	 * @param from
+	 * @param to
+	 */
+	public void dumpCoordinates(int[] from, int[] to)
+	{
+		String text = TablutCoordinate.getCoordinateText(from[1], "horizontal") +
+				TablutCoordinate.getCoordinateText(from[0], "vertical") +
+				"  >  " +
+				TablutCoordinate.getCoordinateText(to[1], "horizontal") +
+				TablutCoordinate.getCoordinateText(to[0], "vertical");
+
+		System.out.println(text);
+	}
+
+
+	/**
 	 * Vrátí duplikát hrací desky.
 	 *
 	 * @return
