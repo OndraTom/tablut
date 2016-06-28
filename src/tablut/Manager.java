@@ -426,14 +426,33 @@ public class Manager implements ActionListener, HistoryListListener
 
 
 	/**
+	 * Obvolá posluchače odoznačení nápovědných polí.
+	 */
+	private void unmarkHintSquares()
+	{
+		for (MarkSquareListener l : markSquareListeners)
+		{
+			l.unmarkHintSquares();
+		}
+	}
+
+
+	/**
 	 * Vyčistí tahy.
 	 */
-	private void clearMoves()
+	public void clearMoves()
 	{
-		if (isPlayerOnMoveHuman() && moveFrom != null && moveTo != null)
+		if (isPlayerOnMoveHuman())
 		{
-			unmarkSquare(moveFrom[0], moveFrom[1]);
-			unmarkSquare(moveTo[0], moveTo[1]);
+			if (moveFrom != null)
+			{
+				unmarkSquare(moveFrom[0], moveFrom[1]);
+
+				if (moveTo != null)
+				{
+					unmarkSquare(moveTo[0], moveTo[1]);
+				}
+			}
 		}
 
 		moveFrom	= null;
@@ -514,6 +533,7 @@ public class Manager implements ActionListener, HistoryListListener
 			}
 
 			moveFrom = new int[]{x, y};
+			unmarkHintSquares();
 			markSquare(x, y);
 		}
 

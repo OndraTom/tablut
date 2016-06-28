@@ -32,4 +32,10 @@ public interface MarkSquareListener extends java.util.EventListener
 	 * @param y
 	 */
 	public void unmarkSquare(int x, int y);
+
+
+	/**
+	 * Odoznačí všechna nápovědná pole.
+	 */
+	public void unmarkHintSquares();
 }

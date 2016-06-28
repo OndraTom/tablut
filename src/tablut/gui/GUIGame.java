@@ -216,7 +216,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 
 
 	@Override
-	public void unmarkSquare(int x, int y)
+	public void unmarkHintSquares()
 	{
 		// Dvourozměrné pole hrací desky - řádek, sloupec.
 		int[][] board = this.board.getBoard();
@@ -228,14 +228,24 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 			{
 				TablutSquare s = (TablutSquare) squares[i][j];
 
-				// Pokud jde o pole na uvedených souřadnicích nebo o nápovědné
-				// pole, tak jej odoznačíme.
-				if ((x == i && y == j) || s.isMarkedAsHint())
+				if (s.isMarkedAsHint())
 				{
 					s.unmark();
 				}
 			}
 		}
+	}
+
+
+	@Override
+	public void unmarkSquare(int x, int y)
+	{
+		TablutSquare s = (TablutSquare) squares[x][y];
+
+		s.unmark();
+
+		// Odoznačíme také nápovědné tahy.
+		unmarkHintSquares();
 	}
 
 
@@ -512,6 +522,8 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 									startThinking();
 									int[][] bestMove = manager.getBestMove();
 									stopThinking();
+
+									manager.clearMoves();
 
 									markSquareAsHint(bestMove[0][0], bestMove[0][1]);
 									markSquareAsHint(bestMove[1][0], bestMove[1][1]);
