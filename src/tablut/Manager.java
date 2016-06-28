@@ -1031,6 +1031,11 @@ public class Manager implements ActionListener, HistoryListListener
 					if (this.judge.isBlindMovesCountReached())
 					{
 						JOptionPane.showMessageDialog(null, "You have reached maximum count of possible moves without taking a stone.");
+
+						if (isPlayerOnMoveComputer())
+						{
+							ComputerPlayer.stopThinking();
+						}
 					}
 
 					if (winner > 0)
