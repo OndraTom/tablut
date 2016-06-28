@@ -888,7 +888,7 @@ public class Manager implements ActionListener, HistoryListListener
 			if (!isGameOver())
 			{
 				// Pokud je hráčem na tahu člověk a nebyl nastaven tah, tak aplikace čeká.
-				if (this.isPlayerOnMoveHuman() && !this.isMoveSet())
+				if ((this.isPlayerOnMoveHuman() && !this.isMoveSet()) || (this.isPlayerOnMoveComputer() && this.isGamePaused()))
 				{
 					Thread.sleep(50);
 					continue;

@@ -484,7 +484,7 @@ public class GUIGame extends javax.swing.JFrame implements ChangeGUIListener, Ch
 			}
 		);
 
-		if (manager.isPlayerOnMoveHuman())
+		if (manager.isPlayerOnMoveHuman() || manager.isGamePaused())
 		{
 			bestMove.addActionListener(new ActionListener()
 			{
