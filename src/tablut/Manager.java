@@ -978,11 +978,10 @@ public class Manager implements ActionListener, HistoryListListener
 
 				}
 
-				// Pokud tah není validní, smažeme tahy a vypíšeme zprávu.
+				// Pokud tah není validní, smažeme druhý tah a jedeme dál.
 				else
 				{
-					this.clearMoves();
-					JOptionPane.showMessageDialog(null, "Move is not valid.");
+					moveTo = null;
 				}
 			}
 
